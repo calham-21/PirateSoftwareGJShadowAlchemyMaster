@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://0f36gjl0ea28"]
+
+[ext_resource type="Texture2D" uid="uid://dcpbj0hodijxc" path="res://assets/terrain/test_checkers_tileset.png" id="1_ajxx0"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_34ka7"]
+texture = ExtResource("1_ajxx0")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+
+[sub_resource type="TileSet" id="TileSet_rghf8"]
+tile_size = Vector2i(32, 32)
+physics_layer_0/collision_layer = 1
+physics_layer_0/collision_mask = 2
+sources/0 = SubResource("TileSetAtlasSource_34ka7")
+
+[node name="TileMap" type="TileMap"]
+tile_set = SubResource("TileSet_rghf8")
+format = 2
