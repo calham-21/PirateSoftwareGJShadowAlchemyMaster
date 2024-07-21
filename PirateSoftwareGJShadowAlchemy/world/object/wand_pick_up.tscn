@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://blmm1kvb1wbp4"]
+
+[ext_resource type="Texture2D" uid="uid://dlr2yelbhurfi" path="res://assets/player/staff.png" id="1_wckkc"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3y0th"]
+
+[node name="WandPickUp" type="Node2D"]
+
+[node name="WandSprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_wckkc")
+hframes = 8
+
+[node name="WandArea" type="Area2D" parent="."]
+
+[node name="WandShape" type="CollisionShape2D" parent="WandArea"]
+shape = SubResource("RectangleShape2D_3y0th")
