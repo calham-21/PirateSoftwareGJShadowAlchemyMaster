@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://btfasgma1a3sm"]
+[gd_scene load_steps=38 format=3 uid="uid://btfasgma1a3sm"]
 
 [ext_resource type="Script" path="res://entities/player/player.gd" id="1_hj8lt"]
 [ext_resource type="Script" path="res://entities/player/statemachine/player_state_machine.gd" id="2_2rs02"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://entities/player/states/Fall.gd" id="5_al34r"]
 [ext_resource type="Script" path="res://entities/player/states/OnLadder.gd" id="6_in0oh"]
 [ext_resource type="Script" path="res://entities/player/states/Push.gd" id="7_r02t6"]
+[ext_resource type="Texture2D" uid="uid://vp2eixv340n5" path="res://assets/player/transmute_area.png" id="10_e5urn"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jicib"]
 atlas = ExtResource("2_evdc8")
@@ -235,14 +236,13 @@ animations = [{
 radius = 8.0
 height = 22.0
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jx63a"]
+size = Vector2(96, 96)
+
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
 collision_layer = 2
 collision_mask = 73
 script = ExtResource("1_hj8lt")
-move_speed = 50.0
-accel = 25.0
-deaccel = 0.5
-gravity = 5.5
 
 [node name="MovementStateMachine" type="Node" parent="."]
 script = ExtResource("2_2rs02")
@@ -306,3 +306,16 @@ hit_from_inside = true
 position = Vector2(0, 15)
 target_position = Vector2(0, 15)
 collision_mask = 64
+
+[node name="MaxTransmuteArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 128
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MaxTransmuteArea"]
+shape = SubResource("RectangleShape2D_jx63a")
+
+[node name="AreaSprite" type="Sprite2D" parent="MaxTransmuteArea"]
+texture = ExtResource("10_e5urn")
+
+[connection signal="area_entered" from="MaxTransmuteArea" to="." method="_on_max_transmute_area_area_entered"]
+[connection signal="area_exited" from="MaxTransmuteArea" to="." method="_on_max_transmute_area_area_exited"]

@@ -1,16 +1,23 @@
-[gd_scene load_steps=3 format=3 uid="uid://blmm1kvb1wbp4"]
+[gd_scene load_steps=4 format=3 uid="uid://blmm1kvb1wbp4"]
 
+[ext_resource type="Script" path="res://world/object/wand_pick_up.gd" id="1_4rpi7"]
 [ext_resource type="Texture2D" uid="uid://dlr2yelbhurfi" path="res://assets/player/staff.png" id="1_wckkc"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3y0th"]
 
 [node name="WandPickUp" type="Node2D"]
+script = ExtResource("1_4rpi7")
 
 [node name="WandSprite" type="Sprite2D" parent="."]
+rotation = 1.39626
 texture = ExtResource("1_wckkc")
 hframes = 8
 
 [node name="WandArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
 
 [node name="WandShape" type="CollisionShape2D" parent="WandArea"]
 shape = SubResource("RectangleShape2D_3y0th")
+
+[connection signal="body_entered" from="WandArea" to="." method="_on_wand_area_body_entered"]

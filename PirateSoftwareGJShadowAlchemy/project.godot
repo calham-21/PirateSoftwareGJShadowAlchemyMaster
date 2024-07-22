@@ -86,6 +86,7 @@ reset={
 2d_physics/layer_5="Water"
 2d_physics/layer_6="Ladder"
 2d_physics/layer_7="DropThrough"
+2d_physics/layer_8="SelectSpace"
 
 [rendering]
 

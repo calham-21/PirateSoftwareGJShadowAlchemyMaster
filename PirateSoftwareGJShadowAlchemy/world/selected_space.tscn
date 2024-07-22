@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://c0mr0jme0pfrg"]
+
+[ext_resource type="Texture2D" uid="uid://cse7bhfty45vx" path="res://assets/box/selected_space.png" id="1_04x4p"]
+[ext_resource type="Script" path="res://world/selected_space.gd" id="2_oki70"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hw10c"]
+size = Vector2(26, 26)
+
+[node name="SelectedSpaceArea" type="Area2D"]
+z_index = 2
+collision_layer = 128
+collision_mask = 8
+script = ExtResource("2_oki70")
+
+[node name="CollisionShape" type="CollisionShape2D" parent="."]
+position = Vector2(16, 16)
+shape = SubResource("RectangleShape2D_hw10c")
+
+[node name="SelectedSpaceSprite" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(16, 16)
+texture = ExtResource("1_04x4p")
+hframes = 4
+vframes = 4
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

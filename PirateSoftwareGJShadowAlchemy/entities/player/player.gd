@@ -8,6 +8,7 @@ class_name Player
 @onready var sprite_base: Node2D = $SpriteBase
 @onready var player_sprite: AnimatedSprite2D = $SpriteBase/PlayerSprite
 @onready var staff_sprite: Sprite2D = $SpriteBase/StaffSprite
+@onready var area_sprite: Sprite2D = $MaxTransmuteArea/AreaSprite
 
 
 #Collisions
@@ -23,18 +24,25 @@ class_name Player
 @onready var ladder_ray_down: RayCast2D = $LadderRaycasts/LadderRayDown
 @onready var drop_through_raycast: RayCast2D = $DropThroughRaycast
 
+#Areas
+@onready var max_transmute_area: Area2D = $MaxTransmuteArea
+
 
 #Statemachine
 @onready var msm: StateMachine = $MovementStateMachine
 
+signal can_transmute
+signal cannot_transmute
+
 #Player movement variables
+@export var has_staff : bool = true
 @export var can_ladder : bool = false
 @export var on_ladder : bool = false
 
-@export var move_speed : float = 0.0
-@export var accel : float = 0.0
-@export_range(0.0, 1.0) var deaccel : float = 0.0
-@export var gravity : float = 0.0
+@export var move_speed : float = 130
+@export var accel : float = 65
+@export_range(0.0, 1.0) var deaccel : float = 0.5
+@export var gravity : float = 20
 
 var can_push : bool = true
 var direction : Vector2
@@ -45,6 +53,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	max_transmute_area.global_position = Vector2i(snappedi(global_position.x, 16), snappedi(global_position.y,16))
 	check_push()
 	if Input.is_action_pressed("reset"):
 		print(reset_count)
@@ -126,3 +135,11 @@ func handle_ladder():
 			else:
 				on_ladder = true
 				
+
+
+func _on_max_transmute_area_area_entered(area: Area2D) -> void:
+	can_transmute.emit()
+
+
+func _on_max_transmute_area_area_exited(area: Area2D) -> void:
+	cannot_transmute.emit()

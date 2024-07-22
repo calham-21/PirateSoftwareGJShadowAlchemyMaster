@@ -1,6 +1,8 @@
 extends PlayerState
 func enter(_msg := {}) -> void:
-	player.staff_sprite.hide()
+	player.staff_sprite.frame = 0
+	player.staff_sprite.z_index = 4
+	#player.staff_sprite.hide()
 	player.current_state = &"OnLadderIdle"
 	#player.global_position.x = player.ladder_ray_down.get_collision_point().x + 16
 	#player.global_position.y -= 2
@@ -28,4 +30,5 @@ func physics_update(_delta: float) -> void:
 	
 func exit() -> void:
 	player.on_ladder = false
-	player.staff_sprite.show()
+	player.staff_sprite.frame = 1
+	player.staff_sprite.z_index = -1

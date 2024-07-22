@@ -1,0 +1,8 @@
+[gd_resource type="CanvasTexture" load_steps=3 format=3 uid="uid://bm0taa6kb2h8d"]
+
+[ext_resource type="Texture2D" uid="uid://btfmqcv1cbqiy" path="res://assets/terrain/storeroom_tileset.png" id="1_de4mi"]
+[ext_resource type="Texture2D" uid="uid://cyworhsyade6y" path="res://assets/terrain/storeroom_tileset_n.png" id="2_srejo"]
+
+[resource]
+diffuse_texture = ExtResource("1_de4mi")
+normal_texture = ExtResource("2_srejo")

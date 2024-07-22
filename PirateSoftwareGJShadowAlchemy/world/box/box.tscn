@@ -19,6 +19,7 @@ collision_mask = 79
 slide_on_ceiling = false
 platform_floor_layers = 4294967041
 script = ExtResource("1_4aqcv")
+is_conducting = false
 sliding_time = 0.2
 gravity = 20.0
 strong_gravity = 40.0
@@ -56,6 +57,12 @@ target_position = Vector2(0, 24)
 collision_mask = 16
 hit_from_inside = true
 
+[node name="PlayerRaycast" type="RayCast2D" parent="."]
+position = Vector2(16, 16)
+target_position = Vector2(0, 25)
+collision_mask = 2
+hit_from_inside = true
+
 [node name="PushParticles" type="CPUParticles2D" parent="."]
 material = SubResource("CanvasItemMaterial_lja3i")
 position = Vector2(16, 32)
@@ -73,3 +80,22 @@ scale_amount_min = 0.1
 scale_amount_max = 0.6
 anim_speed_min = 0.5
 anim_speed_max = 1.0
+
+[node name="CopperRaycasts" type="Node2D" parent="."]
+position = Vector2(16, 16)
+
+[node name="ConductRaycastUp" type="RayCast2D" parent="CopperRaycasts"]
+target_position = Vector2(0, -32)
+collision_mask = 9
+
+[node name="ConductRaycastDown" type="RayCast2D" parent="CopperRaycasts"]
+target_position = Vector2(0, 32)
+collision_mask = 9
+
+[node name="ConductRaycastLeft" type="RayCast2D" parent="CopperRaycasts"]
+target_position = Vector2(-32, 0)
+collision_mask = 9
+
+[node name="ConductRaycastRight" type="RayCast2D" parent="CopperRaycasts"]
+target_position = Vector2(32, 0)
+collision_mask = 9
