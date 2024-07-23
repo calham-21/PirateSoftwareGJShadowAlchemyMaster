@@ -3,7 +3,15 @@ extends CharacterBody2D
 
 @onready var sprite: Sprite2D = $Sprite
 @onready var raycast: RayCast2D = $RayCast
+
 @onready var transmute_raycast: RayCast2D = $TransmuteRaycast
+@onready var tr_bl: RayCast2D = $TransmuteRaycastBL
+@onready var tr_br: RayCast2D = $TransmuteRaycastBR
+@onready var tr_tl: RayCast2D = $TransmuteRaycastTL
+@onready var tr_tr: RayCast2D = $TransmuteRaycastTR
+
+
+
 @onready var bb_raycast: RayCast2D = $BoxBelowRayCast
 @onready var terrain_raycast: RayCast2D = $TerrainRaycast
 @onready var push_particles: CPUParticles2D = $PushParticles

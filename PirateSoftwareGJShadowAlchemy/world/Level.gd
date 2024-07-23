@@ -116,9 +116,18 @@ func selected_space_movement():
 
 func transmute(vel: Vector2):
 	var vel_norm = vel.normalized()
+	print(vel_norm)
 	var new_pos = vel_norm * grid_size
 	selected_box.transmute_raycast.target_position = new_pos*1.45
 	selected_box.transmute_raycast.force_raycast_update()
+		
+	#if !selected_box.tr_tr.is_colliding() or !selected_box.tr_tl.is_colliding() or !selected_box.tr_br.is_colliding() or !selected_box.tr_bl.is_colliding():
+		#print("all good to push")
+	#if !selected_box.tr_tr.is_colliding() or !selected_box.tr_tl.is_colliding() or !selected_box.tr_br.is_colliding() or !selected_box.tr_bl.is_colliding():
+		#print("can not push at all")
+			
+	
+		
 	if selected_box != null:
 		if selected_box.box_type != "Stone":
 			#NOT STONE SPECIFIC

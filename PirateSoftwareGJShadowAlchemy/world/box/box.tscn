@@ -45,6 +45,30 @@ target_position = Vector2(0, 36)
 collision_mask = 11
 hit_from_inside = true
 
+[node name="TransmuteRaycastBL" type="RayCast2D" parent="."]
+position = Vector2(16, 16)
+target_position = Vector2(-15, 28)
+collision_mask = 2
+hit_from_inside = true
+
+[node name="TransmuteRaycastBR" type="RayCast2D" parent="."]
+position = Vector2(16, 16)
+target_position = Vector2(15, 28)
+collision_mask = 2
+hit_from_inside = true
+
+[node name="TransmuteRaycastTL" type="RayCast2D" parent="."]
+position = Vector2(16, 16)
+target_position = Vector2(-15, -28)
+collision_mask = 2
+hit_from_inside = true
+
+[node name="TransmuteRaycastTR" type="RayCast2D" parent="."]
+position = Vector2(16, 16)
+target_position = Vector2(15, -28)
+collision_mask = 2
+hit_from_inside = true
+
 [node name="BoxBelowRayCast" type="RayCast2D" parent="."]
 position = Vector2(16, 16)
 target_position = Vector2(0, 26)

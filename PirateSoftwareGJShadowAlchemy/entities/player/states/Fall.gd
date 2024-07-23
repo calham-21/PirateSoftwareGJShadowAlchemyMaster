@@ -4,6 +4,9 @@ func enter(_msg := {}) -> void:
 func update(_delta: float) -> void:
 	pass
 func physics_update(_delta: float) -> void:
+	if player.on_ladder == true:
+		state_machine.transition_to("OnLadder")
+	
 	if player.is_on_floor():
 		var tween = get_tree().create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
 		tween.set_parallel(true)
