@@ -5,7 +5,8 @@ extends Node2D
 
 @export var can_win : bool = false
 @export var has_won : bool = false
-
+signal change_level 
+@export var next_level_path : String
 
 @export var grid_size : int = 32
 const BOX = preload("res://world/box/box.tscn")
@@ -26,6 +27,8 @@ func can_win_handler():
 	
 func win_handler():
 	has_won = true
+	#change_level.emit()
+	get_tree().change_scene_to_file(next_level_path)
 	print("player has won")
 
 func _ready() -> void:
@@ -121,13 +124,20 @@ func transmute(vel: Vector2):
 	selected_box.transmute_raycast.target_position = new_pos*1.45
 	selected_box.transmute_raycast.force_raycast_update()
 		
-	#if !selected_box.tr_tr.is_colliding() or !selected_box.tr_tl.is_colliding() or !selected_box.tr_br.is_colliding() or !selected_box.tr_bl.is_colliding():
-		#print("all good to push")
-	#if !selected_box.tr_tr.is_colliding() or !selected_box.tr_tl.is_colliding() or !selected_box.tr_br.is_colliding() or !selected_box.tr_bl.is_colliding():
-		#print("can not push at all")
+	#for t_ray in selected_box.extra_transmute_rays.get_children():
+		#if t_ray.is_colliding():
+			#return false
 			
-	
-		
+	if selected_box.tr_tr.is_colliding() or selected_box.tr_tl.is_colliding():
+		if vel_norm == Vector2(0, -1):
+			print("cant push up cause on top")
+			return
+			
+	if selected_box.tr_br.is_colliding() or selected_box.tr_bl.is_colliding():
+		if vel_norm == Vector2(0, 1):
+			print("cant push down cause beneath")
+			return
+			
 	if selected_box != null:
 		if selected_box.box_type != "Stone":
 			#NOT STONE SPECIFIC

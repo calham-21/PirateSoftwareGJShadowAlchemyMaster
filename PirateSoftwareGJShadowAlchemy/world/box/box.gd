@@ -5,10 +5,12 @@ extends CharacterBody2D
 @onready var raycast: RayCast2D = $RayCast
 
 @onready var transmute_raycast: RayCast2D = $TransmuteRaycast
-@onready var tr_bl: RayCast2D = $TransmuteRaycastBL
-@onready var tr_br: RayCast2D = $TransmuteRaycastBR
-@onready var tr_tl: RayCast2D = $TransmuteRaycastTL
-@onready var tr_tr: RayCast2D = $TransmuteRaycastTR
+@onready var extra_transmute_rays: Node2D = $ExtraTransmuteRays
+@onready var tr_bl: RayCast2D = $ExtraTransmuteRays/TransmuteRaycastBL
+@onready var tr_br: RayCast2D = $ExtraTransmuteRays/TransmuteRaycastBR
+@onready var tr_tl: RayCast2D = $ExtraTransmuteRays/TransmuteRaycastTL
+@onready var tr_tr: RayCast2D = $ExtraTransmuteRays/TransmuteRaycastTR
+
 
 
 
@@ -17,6 +19,8 @@ extends CharacterBody2D
 @onready var push_particles: CPUParticles2D = $PushParticles
 @onready var player_raycast: RayCast2D = $PlayerRaycast
 
+
+@onready var copper_ray: Node2D = $CopperRaycasts
 @onready var cr_up: RayCast2D = $CopperRaycasts/ConductRaycastUp
 @onready var cr_down: RayCast2D = $CopperRaycasts/ConductRaycastDown
 @onready var cr_left: RayCast2D = $CopperRaycasts/ConductRaycastLeft
@@ -32,6 +36,7 @@ var box_type : String
 
 #@export var can_conduct : bool = false
 @export var is_conducting : bool = true
+@export var touching_battery : bool = false
 
 @export var sliding_time : float = 0.5
 @export var is_sliding : bool
@@ -55,7 +60,7 @@ func _process(delta: float) -> void:
 		sprite.frame = box_type_index
 	
 	
-
+	
 func push(vel: Vector2) -> bool:
 	#Push logic. Gets velocity and normalises it to get direction.
 	#Times that dir with grid size to find the new position the box will be pushed too.
@@ -99,39 +104,47 @@ func push(vel: Vector2) -> bool:
 
 func _physics_process(delta: float) -> void:
 	#If box is not stone, fall.
+	#if velocity.y > 0:
+		#is_conducting = false
 	if box_type == "Dirt" or box_type == "Copper" or box_type == "Sodium" or box_type == "Gold":
 		velocity.y += gravity
 	elif box_type == "Lead": #Fall stronger for lead
 		velocity.y += strong_gravity
 	else:
 		velocity.y = 0
-	
 	#Check box type. Originally sliding time was different for
 	#each box type. That sucked so keep the same.
 	#Handles box logic based on box type
 	if box_type == "Dirt":
 		sliding_time = 0.25
 		is_conducting = false
+		touching_battery = false
 	elif box_type == "Stone":
 		sliding_time = 0.25
 		is_conducting = false
+		touching_battery = false
 	elif box_type == "Copper":
+		#is_conducting = false
 		sliding_time = 0.25
 		copper_logic()
 	elif box_type == "Sodium":
+		is_conducting = false
+		touching_battery = false
 		sliding_time = 0.25
 		sodium_logic()
 		is_conducting = false
 	elif box_type == "Lead":
 		sliding_time = 0.25
+		touching_battery = false
 		is_conducting = false
 	elif box_type == "Gold":
 		sliding_time = 0.25
+		touching_battery = false
 		is_conducting = false
-		
 	move_and_slide()
 
 func copper_logic():
+
 	#Evil code. Beware.
 	##BOX
 	if cr_up.is_colliding():
@@ -140,6 +153,7 @@ func copper_logic():
 			if col.box_type == "Copper":
 				if col.is_conducting == true:
 					is_conducting = true
+					return
 				else:
 					is_conducting = false
 			else:
@@ -151,6 +165,8 @@ func copper_logic():
 				var conduct_data = tile.get_custom_data("is_conducting")
 				if conduct_data == true:
 					is_conducting = true
+				else:
+					is_conducting = false
 					
 #---------------------------------------------------------------------------------------------------
 	##BOX
@@ -160,6 +176,7 @@ func copper_logic():
 			if col.box_type == "Copper":
 				if col.is_conducting == true:
 					is_conducting = true
+					return
 				else:
 					is_conducting = false
 			else:
@@ -171,6 +188,8 @@ func copper_logic():
 				var conduct_data = tile.get_custom_data("is_conducting")
 				if conduct_data == true:
 					is_conducting = true
+				else:
+					is_conducting = false
 #---------------------------------------------------------------------------------------------------
 	##BOX
 	if cr_left.is_colliding():
@@ -179,6 +198,7 @@ func copper_logic():
 			if col.box_type == "Copper":
 				if col.is_conducting == true:
 					is_conducting = true
+					return
 				else:
 					is_conducting = false
 			else:
@@ -191,7 +211,8 @@ func copper_logic():
 				var conduct_data = tile.get_custom_data("is_conducting")
 				if conduct_data == true:
 					is_conducting = true
-			
+				else:
+					is_conducting = false
 #---------------------------------------------------------------------------------------------------
 	##BOX
 	if cr_right.is_colliding():
@@ -200,6 +221,7 @@ func copper_logic():
 			if col.box_type == "Copper":
 				if col.is_conducting == true:
 					is_conducting = true
+					return
 				else:
 					is_conducting = false
 			else:
@@ -211,8 +233,9 @@ func copper_logic():
 				var conduct_data = tile.get_custom_data("is_conducting")
 				if conduct_data == true:
 					is_conducting = true
-
-#---------------------------------------------------------------------------------------------------
+			else:
+				is_conducting = false
+	#----------------------------------------------------------------------------------------------------
 func sodium_logic():
 	if terrain_raycast.is_colliding():
 		print("explode")

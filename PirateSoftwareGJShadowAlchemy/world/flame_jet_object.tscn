@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://dhfrvifslx66r"]
+
+[ext_resource type="Texture2D" uid="uid://bekajk80uj2we" path="res://assets/object/flame_jet_object.png" id="1_ukwqs"]
+
+[node name="FlameJet" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_ukwqs")
+centered = false
+hframes = 8
+vframes = 8

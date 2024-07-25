@@ -15,7 +15,7 @@ particles_anim_loop = true
 
 [node name="Box" type="CharacterBody2D" groups=["Box"]]
 collision_layer = 8
-collision_mask = 79
+collision_mask = 75
 slide_on_ceiling = false
 platform_floor_layers = 4294967041
 script = ExtResource("1_4aqcv")
@@ -45,25 +45,27 @@ target_position = Vector2(0, 36)
 collision_mask = 11
 hit_from_inside = true
 
-[node name="TransmuteRaycastBL" type="RayCast2D" parent="."]
+[node name="ExtraTransmuteRays" type="Node2D" parent="."]
+
+[node name="TransmuteRaycastBL" type="RayCast2D" parent="ExtraTransmuteRays"]
 position = Vector2(16, 16)
-target_position = Vector2(-15, 28)
+target_position = Vector2(-15, 32)
 collision_mask = 2
 hit_from_inside = true
 
-[node name="TransmuteRaycastBR" type="RayCast2D" parent="."]
+[node name="TransmuteRaycastBR" type="RayCast2D" parent="ExtraTransmuteRays"]
 position = Vector2(16, 16)
-target_position = Vector2(15, 28)
+target_position = Vector2(15, 32)
 collision_mask = 2
 hit_from_inside = true
 
-[node name="TransmuteRaycastTL" type="RayCast2D" parent="."]
+[node name="TransmuteRaycastTL" type="RayCast2D" parent="ExtraTransmuteRays"]
 position = Vector2(16, 16)
 target_position = Vector2(-15, -28)
 collision_mask = 2
 hit_from_inside = true
 
-[node name="TransmuteRaycastTR" type="RayCast2D" parent="."]
+[node name="TransmuteRaycastTR" type="RayCast2D" parent="ExtraTransmuteRays"]
 position = Vector2(16, 16)
 target_position = Vector2(15, -28)
 collision_mask = 2
@@ -109,17 +111,25 @@ anim_speed_max = 1.0
 position = Vector2(16, 16)
 
 [node name="ConductRaycastUp" type="RayCast2D" parent="CopperRaycasts"]
-target_position = Vector2(0, -32)
+position = Vector2(0, -17)
+target_position = Vector2(0, -30)
 collision_mask = 9
+hit_from_inside = true
 
 [node name="ConductRaycastDown" type="RayCast2D" parent="CopperRaycasts"]
-target_position = Vector2(0, 32)
+position = Vector2(0, 17)
+target_position = Vector2(0, 30)
 collision_mask = 9
+hit_from_inside = true
 
 [node name="ConductRaycastLeft" type="RayCast2D" parent="CopperRaycasts"]
-target_position = Vector2(-32, 0)
+position = Vector2(-17, 0)
+target_position = Vector2(-29, 0)
 collision_mask = 9
+hit_from_inside = true
 
 [node name="ConductRaycastRight" type="RayCast2D" parent="CopperRaycasts"]
-target_position = Vector2(32, 0)
+position = Vector2(17, 0)
+target_position = Vector2(29, 0)
 collision_mask = 9
+hit_from_inside = true

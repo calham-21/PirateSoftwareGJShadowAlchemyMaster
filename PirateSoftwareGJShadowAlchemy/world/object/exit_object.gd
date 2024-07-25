@@ -1,5 +1,4 @@
 extends Node2D
-
 signal can_win_signal
 signal has_won_signal
 @export var can_win : bool = false

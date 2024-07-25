@@ -1,0 +1,36 @@
+[gd_scene load_steps=6 format=3 uid="uid://dgv073w0ku76x"]
+
+[ext_resource type="Script" path="res://entities/enemies/enemy.gd" id="1_ea340"]
+[ext_resource type="Texture2D" uid="uid://b1idgtuqjrcuy" path="res://assets/enemy/enemy_bad_alchemist.png" id="2_isdsl"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k4sxq"]
+atlas = ExtResource("2_isdsl")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ohujk"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k4sxq")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_g4mi3"]
+radius = 6.0
+height = 22.0
+
+[node name="Enemy" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_ea340")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_ohujk")
+animation = &"Idle"
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+position = Vector2(0, 12)
+shape = SubResource("CapsuleShape2D_g4mi3")
