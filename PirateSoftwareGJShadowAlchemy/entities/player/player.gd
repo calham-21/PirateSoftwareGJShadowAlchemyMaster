@@ -143,3 +143,7 @@ func _on_max_transmute_area_area_entered(area: Area2D) -> void:
 
 func _on_max_transmute_area_area_exited(area: Area2D) -> void:
 	cannot_transmute.emit()
+
+
+func _on_death_area_body_entered(body: Node2D) -> void:
+	get_tree().reload_current_scene()

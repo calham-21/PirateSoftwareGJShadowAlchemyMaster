@@ -156,8 +156,10 @@ func copper_logic():
 					return
 				else:
 					is_conducting = false
+					
 			else:
 				is_conducting = false
+				
 		##TILEMAP
 		elif col != null and col.is_in_group("TileMap"):
 			var tile =  col.get_cell_tile_data(0, col.local_to_map(cr_up.get_collision_point()))
@@ -170,7 +172,7 @@ func copper_logic():
 					
 #---------------------------------------------------------------------------------------------------
 	##BOX
-	if cr_down.is_colliding():
+	elif cr_down.is_colliding():
 		var col = cr_down.get_collider()
 		if col != null and col.is_in_group("Box"):
 			if col.box_type == "Copper":
@@ -215,7 +217,7 @@ func copper_logic():
 					is_conducting = false
 #---------------------------------------------------------------------------------------------------
 	##BOX
-	if cr_right.is_colliding():
+	elif cr_right.is_colliding():
 		var col = cr_right.get_collider()
 		if col != null and col.is_in_group("Box"):
 			if col.box_type == "Copper":
