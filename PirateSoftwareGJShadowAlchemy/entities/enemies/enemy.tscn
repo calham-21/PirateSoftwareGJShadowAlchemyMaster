@@ -1,36 +1,136 @@
-[gd_scene load_steps=6 format=3 uid="uid://dgv073w0ku76x"]
+[gd_scene load_steps=14 format=3 uid="uid://dgv073w0ku76x"]
 
 [ext_resource type="Script" path="res://entities/enemies/enemy.gd" id="1_ea340"]
 [ext_resource type="Texture2D" uid="uid://b1idgtuqjrcuy" path="res://assets/enemy/enemy_bad_alchemist.png" id="2_isdsl"]
+[ext_resource type="Texture2D" uid="uid://cb7bxn1cuumuo" path="res://assets/particle/player_death_particle.png" id="3_en2i3"]
+[ext_resource type="Texture2D" uid="uid://b66dqb45brx7s" path="res://assets/particle/flame_particle.png" id="4_xu0kf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_k4sxq"]
 atlas = ExtResource("2_isdsl")
 region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nvqsi"]
+atlas = ExtResource("2_isdsl")
+region = Rect2(0, 48, 48, 48)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ohujk"]
 animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_k4sxq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nvqsi")
 }],
 "loop": true,
 "name": &"Idle",
-"speed": 5.0
+"speed": 1.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_g4mi3"]
 radius = 6.0
 height = 22.0
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_kv61g"]
+particles_animation = true
+particles_anim_h_frames = 2
+particles_anim_v_frames = 2
+particles_anim_loop = false
+
+[sub_resource type="Gradient" id="Gradient_trcqr"]
+colors = PackedColorArray(1, 0.60702, 0.548183, 1, 1, 1, 1, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_nyocb"]
+particles_animation = true
+particles_anim_h_frames = 2
+particles_anim_v_frames = 2
+particles_anim_loop = false
+
+[sub_resource type="Gradient" id="Gradient_3l57k"]
+offsets = PackedFloat32Array(0, 0.2, 0.566667, 0.786667, 1)
+colors = PackedColorArray(0.609305, 0, 0.0953671, 1, 1, 0.027451, 0.254902, 1, 1, 0, 0.266667, 1, 0.968627, 0.156863, 0, 1, 0.968627, 0.113725, 0, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5xjib"]
+size = Vector2(52, 22)
+
 [node name="Enemy" type="CharacterBody2D"]
 collision_layer = 4
-collision_mask = 0
+collision_mask = 73
 script = ExtResource("1_ea340")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ohujk")
 animation = &"Idle"
+frame = 1
+frame_progress = 0.0405056
 
 [node name="Shape" type="CollisionShape2D" parent="."]
 position = Vector2(0, 12)
 shape = SubResource("CapsuleShape2D_g4mi3")
+
+[node name="DeathParticles" type="CPUParticles2D" parent="."]
+z_index = 5
+material = SubResource("CanvasItemMaterial_kv61g")
+position = Vector2(0, 7.54)
+emitting = false
+amount = 18
+one_shot = true
+explosiveness = 1.0
+randomness = 0.55
+lifetime_randomness = 0.3
+texture = ExtResource("3_en2i3")
+direction = Vector2(0, -1)
+spread = 88.64
+initial_velocity_min = 141.42
+initial_velocity_max = 274.33
+angle_min = -494.5
+angle_max = 389.1
+scale_amount_min = 0.7
+color_ramp = SubResource("Gradient_trcqr")
+anim_speed_min = 0.8
+anim_speed_max = 1.0
+
+[node name="FaceFireParticles" type="CPUParticles2D" parent="."]
+z_index = 1
+material = SubResource("CanvasItemMaterial_nyocb")
+position = Vector2(3, 0)
+amount = 18
+lifetime = 1.5
+texture = ExtResource("4_xu0kf")
+direction = Vector2(0, 1)
+gravity = Vector2(55, 0)
+linear_accel_min = 0.8
+linear_accel_max = 1.0
+angle_min = -283.4
+scale_amount_min = 0.2
+scale_amount_max = 0.25
+color_ramp = SubResource("Gradient_3l57k")
+hue_variation_min = -1.0
+hue_variation_max = -0.15
+anim_speed_min = 0.8
+anim_speed_max = 1.0
+
+[node name="DeathArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="DeathShape" type="CollisionShape2D" parent="DeathArea"]
+position = Vector2(36, 9)
+shape = SubResource("RectangleShape2D_5xjib")
+
+[node name="BoxRaycast" type="RayCast2D" parent="."]
+target_position = Vector2(48, 0)
+collision_mask = 8
+hit_from_inside = true
+
+[node name="CrushRay" type="RayCast2D" parent="."]
+position = Vector2(0, 9)
+target_position = Vector2(8, 0)
+collision_mask = 8
+
+[node name="CrushRay2" type="RayCast2D" parent="."]
+position = Vector2(0, 9)
+target_position = Vector2(-8, 0)
+collision_mask = 8
+
+[connection signal="body_entered" from="DeathArea" to="." method="_on_death_area_body_entered"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://oretaw7o7q10"]
+[gd_scene load_steps=7 format=3 uid="uid://oretaw7o7q10"]
 
 [ext_resource type="Script" path="res://world/box/box.gd" id="1_4aqcv"]
 [ext_resource type="Texture2D" uid="uid://cesarlkkxojsx" path="res://assets/box/box.png" id="2_8ipqx"]
@@ -12,6 +12,9 @@ particles_animation = true
 particles_anim_h_frames = 2
 particles_anim_v_frames = 2
 particles_anim_loop = true
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_efviu"]
+size = Vector2(20, 32)
 
 [node name="Box" type="CharacterBody2D" groups=["Box"]]
 collision_layer = 8
@@ -89,6 +92,9 @@ target_position = Vector2(0, 25)
 collision_mask = 2
 hit_from_inside = true
 
+[node name="EnemyRaycast" type="RayCast2D" parent="."]
+collision_mask = 4
+
 [node name="PushParticles" type="CPUParticles2D" parent="."]
 material = SubResource("CanvasItemMaterial_lja3i")
 position = Vector2(16, 32)
@@ -133,3 +139,14 @@ position = Vector2(17, 0)
 target_position = Vector2(29, 0)
 collision_mask = 9
 hit_from_inside = true
+
+[node name="CrushArea" type="Area2D" parent="."]
+position = Vector2(16, 33)
+collision_layer = 0
+collision_mask = 6
+
+[node name="Shape" type="CollisionShape2D" parent="CrushArea"]
+position = Vector2(0, 15)
+shape = SubResource("RectangleShape2D_efviu")
+
+[connection signal="body_entered" from="CrushArea" to="." method="_on_crush_area_body_entered"]

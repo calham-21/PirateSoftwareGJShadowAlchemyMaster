@@ -17,7 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-WindowHandler="*res://global/WindowHandler.gd"
+SceneTransition="*res://global/scene_transition.tscn"
 
 [display]
 
@@ -30,6 +30,7 @@ window/stretch/aspect="expand"
 [gui]
 
 theme/default_font_antialiasing=0
+theme/default_font_hinting=2
 
 [input]
 

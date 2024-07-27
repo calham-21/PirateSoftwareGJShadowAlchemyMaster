@@ -13,13 +13,28 @@ const BOX = preload("res://world/box/box.tscn")
 
 @export var selected_box : Node
 @export var temp_box : Node
-@onready var selected_space: Area2D = $SelectedSpace
+@onready var selected_space: CharacterBody2D = $SelectedSpace
 @onready var selected_space_sprite: Sprite2D = $SelectedSpace/SelectedSpaceSprite
 @onready var collision_shape: CollisionShape2D = $SelectedSpace/SelectedSpaceArea/CollisionShape
 @onready var exit: Node2D = $Exit
+var can_shake : bool = false
 
 var can_select: bool = true
 var can_transmute : bool = false
+
+var reset_count : int = 0
+
+@export var is_tutorial : bool = false
+@onready var arrow_key_tutorial: Sprite2D = $ArrowKeyTutorial
+@onready var wasd_key_tutorial: Sprite2D = $WASDKeyTutorial
+@onready var e_key_tutorial: Sprite2D = $EKeyTutorial
+@onready var space_key_tutorial: Sprite2D = $SpaceKeyTutorial
+
+signal wasd_tut
+signal arrow_tut
+signal space_tut
+signal e_tut
+
 
 func can_win_handler():
 	exit.can_win = true
@@ -27,7 +42,8 @@ func can_win_handler():
 	
 func win_handler():
 	has_won = true
-	#change_level.emit()
+	SceneTransition.transition_in()
+	await(get_tree().create_timer(1).timeout)
 	get_tree().change_scene_to_file(next_level_path)
 	print("player has won")
 
@@ -60,7 +76,29 @@ func cannot_transmute_handler():
 	can_transmute = false
 
 
+func tutorial_sequence():
+	if Input.is_action_pressed("left") or Input.is_action_pressed("right")\
+	or Input.is_action_pressed("up") or Input.is_action_pressed("down"):
+		var tween = create_tween().set_parallel(false)
+		tween.tween_property(wasd_key_tutorial, "modulate", Color(0, 0, 0, 0), 1.5).from_current()
+	if player.has_staff:
+		if selected_box == null:
+			if Input.is_action_pressed("arrow_left") or Input.is_action_pressed("arrow_right")\
+			or Input.is_action_pressed("arrow_up") or Input.is_action_pressed("arrow_down"):
+				var tween = create_tween().set_parallel(false)
+				tween.tween_property(arrow_key_tutorial, "modulate", Color(0, 0, 0, 0), 1.5).from_current()
+		else:
+			if Input.is_action_pressed("arrow_left") or Input.is_action_pressed("arrow_right")\
+			or Input.is_action_pressed("arrow_up") or Input.is_action_pressed("arrow_down"):
+				var tween = create_tween().set_parallel(false)
+				tween.tween_property(e_key_tutorial, "modulate", Color(0, 0, 0, 0), 1.5).from_current()
+			
+
+
 func _process(delta: float) -> void:
+	if is_tutorial == true:
+		tutorial_sequence()
+		
 	if has_won != true:
 		if player.has_staff == true:
 			player.area_sprite.show()
@@ -76,28 +114,63 @@ func _process(delta: float) -> void:
 func selected_space_movement():
 	#if can_transmute == false:
 		#selected_box = null
-	if can_transmute and selected_box == null:
+	if can_shake:
+		selected_space_sprite.frame = 3
+	else:
+		pass
+	if can_transmute and temp_box == null and can_shake == false:
+		selected_space_sprite.frame = 0
+		player.staff_sprite.frame = 1
+	elif can_transmute and temp_box != null and can_shake == false:
 		selected_space_sprite.frame = 1
-	elif can_transmute and temp_box != null:
-		selected_space_sprite.frame = 2
+		player.staff_sprite.frame = 2
 	elif can_transmute == false and temp_box == null:
 		selected_space_sprite.frame = 3
+		player.staff_sprite.frame = 4
 		selected_box = null
 	elif can_transmute == false and temp_box != null:
 		selected_space_sprite.frame = 3
+		player.staff_sprite.frame = 4
 		
-	if temp_box != null:
-		if can_transmute:
+	if temp_box != null and can_transmute:
 			if Input.is_action_just_pressed("interact"):
 				selected_space_sprite.frame = 0
+				player.staff_sprite.frame = 1
 				selected_box = temp_box
 				temp_box = null
+	elif temp_box == null and !can_transmute:
+		if Input.is_action_just_pressed("interact") and can_shake == false:
+			can_shake = true
+			selected_space_sprite.frame = 3
+			player.staff_sprite.frame = 4
+			var current_pos = selected_space_sprite.position
+			var tween = create_tween().set_parallel(false).set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+			tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position - Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+			tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position + Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+			tween.tween_property(selected_space_sprite, "position", current_pos, 0.1).set_trans(Tween.TRANS_BOUNCE)
+			await(tween.finished)
+			can_shake = false
+	elif temp_box != null and !can_transmute:
+		if Input.is_action_just_pressed("interact") and can_shake == false:
+			can_shake = true
+			selected_space_sprite.frame = 3
+			player.staff_sprite.frame = 4
+			var current_pos = selected_space_sprite.position
+			var tween = create_tween().set_parallel(false).set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+			tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position - Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+			tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position + Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+			tween.tween_property(selected_space_sprite, "position", current_pos, 0.1).set_trans(Tween.TRANS_BOUNCE)
+			await(tween.finished)
+			can_shake = false
 			
-	if selected_box != null:
+	if selected_box != null and can_shake == false:
 		if Input.is_action_just_pressed("cancel"):
 			selected_space_sprite.frame = 1
+			player.staff_sprite.frame = 2
 			selected_box = null
 		if can_transmute:
+			selected_space_sprite.frame = 2
+			player.staff_sprite.frame = 3
 			if Input.is_action_just_pressed("arrow_left"):
 				transmute(Vector2.LEFT)
 			if Input.is_action_just_pressed("arrow_right"):
@@ -108,13 +181,26 @@ func selected_space_movement():
 				transmute(Vector2.DOWN)
 	else:
 		if Input.is_action_just_pressed("arrow_left"):
-			selected_space.global_position.x -= 32
+			selected_space.move(Vector2.LEFT)
 		if Input.is_action_just_pressed("arrow_right"):
-			selected_space.global_position.x += 32
+			selected_space.move(Vector2.RIGHT)
 		if Input.is_action_just_pressed("arrow_up"):
-			selected_space.global_position.y -= 32
+			selected_space.move(Vector2.UP)
 		if Input.is_action_just_pressed("arrow_down"):
-			selected_space.global_position.y += 32
+			selected_space.move(Vector2.DOWN)
+			
+	if selected_space == null and can_transmute == false:
+		if Input.is_action_just_pressed("interact") and can_shake == false:
+			can_shake = true
+			selected_space_sprite.frame = 1
+			player.staff_sprite.frame = 4
+			var current_pos = selected_space_sprite.position
+			var tween = create_tween().set_parallel(false).set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+			tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position - Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+			tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position + Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+			tween.tween_property(selected_space_sprite, "position", current_pos, 0.1).set_trans(Tween.TRANS_BOUNCE)
+			await(tween.finished)
+			can_shake = false
 
 
 func transmute(vel: Vector2):
@@ -131,12 +217,35 @@ func transmute(vel: Vector2):
 	if selected_box.tr_tr.is_colliding() or selected_box.tr_tl.is_colliding():
 		if vel_norm == Vector2(0, -1):
 			print("cant push up cause on top")
-			return
-			
+			if can_shake == false:
+				can_shake = true
+				selected_space_sprite.frame = 3
+				player.staff_sprite.frame = 4
+				#selected_box = null
+				var current_pos = selected_space_sprite.position
+				var tween = create_tween().set_parallel(false).set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+				tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position - Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+				tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position + Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+				tween.tween_property(selected_space_sprite, "position", current_pos, 0.1).set_trans(Tween.TRANS_BOUNCE)
+				await(tween.finished)
+				can_shake = false
+				return
 	if selected_box.tr_br.is_colliding() or selected_box.tr_bl.is_colliding():
 		if vel_norm == Vector2(0, 1):
 			print("cant push down cause beneath")
-			return
+			if can_shake == false:
+				can_shake = true
+				selected_space_sprite.frame = 3
+				player.staff_sprite.frame = 4
+				#selected_box = null
+				var current_pos = selected_space_sprite.position
+				var tween = create_tween().set_parallel(false).set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+				tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position - Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+				tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position + Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+				tween.tween_property(selected_space_sprite, "position", current_pos, 0.1).set_trans(Tween.TRANS_BOUNCE)
+				await(tween.finished)
+				can_shake = false
+				return
 			
 	if selected_box != null:
 		if selected_box.box_type != "Stone":
@@ -152,6 +261,15 @@ func transmute(vel: Vector2):
 						selected_box.box_type_index = selected_box.box_type_index - 1
 						selected_space.global_position = new_box.position
 						add_child(new_box)
+					else:
+						selected_space_sprite.frame = 3
+						player.staff_sprite.frame = 4
+						var current_pos = selected_space_sprite.position
+						var tween = create_tween().set_parallel(false).set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+						tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position - Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+						tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position + Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+						tween.tween_property(selected_space_sprite, "position", current_pos, 0.1).set_trans(Tween.TRANS_BOUNCE)
+						await(tween.finished)
 						
 			#COMBINE INTO ONE
 			elif selected_box.transmute_raycast.is_colliding() and selected_box.is_sliding == false:
@@ -170,11 +288,31 @@ func transmute(vel: Vector2):
 							selected_box.queue_free()
 							#selected_box = new_box
 						else:
-							print("different1")	
-							selected_box = null
+							if can_shake == false:
+								can_shake = true
+								selected_space_sprite.frame = 3
+								player.staff_sprite.frame = 4
+								#selected_box = null
+								var current_pos = selected_space_sprite.position
+								var tween = create_tween().set_parallel(false).set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+								tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position - Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+								tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position + Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+								tween.tween_property(selected_space_sprite, "position", current_pos, 0.1).set_trans(Tween.TRANS_BOUNCE)
+								await(tween.finished)
+								can_shake = false
 					else:
-						print("cant push1")
-						selected_box = null
+						if can_shake == false:
+							can_shake = true
+							selected_space_sprite.frame = 3
+							player.staff_sprite.frame = 4
+							selected_box = null
+							var current_pos = selected_space_sprite.position
+							var tween = create_tween().set_parallel(false).set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+							tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position - Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+							tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position + Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+							tween.tween_property(selected_space_sprite, "position", current_pos, 0.1).set_trans(Tween.TRANS_BOUNCE)
+							await(tween.finished)
+							can_shake = false
 		else:
 			#STONE
 			#SPLIT INTO TWO
@@ -203,11 +341,31 @@ func transmute(vel: Vector2):
 						selected_box.queue_free()
 						#selected_box = new_box
 					else:
-						print("different2")
-						selected_box = null
-				else:
-					print("cant push2")
-					selected_box = null
+						if can_shake == false:
+							can_shake = true
+							selected_space_sprite.frame = 3
+							player.staff_sprite.frame = 4
+							#selected_box = null
+							var current_pos = selected_space_sprite.position
+							var tween = create_tween().set_parallel(false).set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+							tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position - Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+							tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position + Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+							tween.tween_property(selected_space_sprite, "position", current_pos, 0.1).set_trans(Tween.TRANS_BOUNCE)
+							await(tween.finished)
+							can_shake = false
+				else: #Cant push
+					if can_shake == false:
+						can_shake = true
+						selected_space_sprite.frame = 3
+						player.staff_sprite.frame = 4
+						#selected_box = null
+						var current_pos = selected_space_sprite.position
+						var tween = create_tween().set_parallel(false).set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+						tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position - Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+						tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position + Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+						tween.tween_property(selected_space_sprite, "position", current_pos, 0.1).set_trans(Tween.TRANS_BOUNCE)
+						await(tween.finished)
+						can_shake = false
 	else:
 		print("CANNOT PUSH EVER")
 
@@ -217,3 +375,29 @@ func transmute(vel: Vector2):
 
 
 
+
+
+func _on_space_key_area_body_entered(body: Node2D) -> void:
+	$SpaceKeyArea.set_disable_mode(CollisionObject2D.DISABLE_MODE_REMOVE)
+	$SpaceKeyArea/Shape.call_deferred("set_disabled", true)
+	var tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+	tween.tween_property(space_key_tutorial, "modulate", Color(1, 1, 1, 1), 1.5).from_current()
+
+func _on_space_key_area_2_body_entered(body: Node2D) -> void:
+	$SpaceKeyArea2.set_disable_mode(CollisionObject2D.DISABLE_MODE_REMOVE)
+	$SpaceKeyArea2/Shape.call_deferred("set_disabled", true)
+	var tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+	tween.tween_property(space_key_tutorial, "modulate", Color(0, 0, 0, 0), 1.5).from_current()
+
+func _on_arrow_key_tut_body_entered(body: Node2D) -> void:
+	$ArrowKeyArea.set_disable_mode(CollisionObject2D.DISABLE_MODE_REMOVE)
+	$ArrowKeyArea/Shape.call_deferred("set_disabled", true)
+	var tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+	tween.tween_property(arrow_key_tutorial, "modulate", Color(1, 1, 1, 1), 1.5).from_current()
+
+func _on_arrow_key_tut_2_area_entered(area: Area2D) -> void:
+	$ArrowKeyArea2.set_disable_mode(CollisionObject2D.DISABLE_MODE_REMOVE)
+	$ArrowKeyArea2/Shape.call_deferred("set_disabled", true)
+	var tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+	tween.set_parallel(false)
+	tween.tween_property(e_key_tutorial, "modulate", Color(1, 1, 1, 1), 1.5).from_current()

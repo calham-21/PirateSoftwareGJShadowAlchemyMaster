@@ -1,6 +1,7 @@
 extends CharacterBody2D
 class_name Player
 
+
 @export var reset_count : int = 0
 
 @export var current_state : StringName
@@ -9,7 +10,6 @@ class_name Player
 @onready var player_sprite: AnimatedSprite2D = $SpriteBase/PlayerSprite
 @onready var staff_sprite: Sprite2D = $SpriteBase/StaffSprite
 @onready var area_sprite: Sprite2D = $MaxTransmuteArea/AreaSprite
-
 
 #Collisions
 @onready var stand_shape: CollisionShape2D = $CollisionShape
@@ -26,6 +26,9 @@ class_name Player
 
 #Areas
 @onready var max_transmute_area: Area2D = $MaxTransmuteArea
+
+#Particles
+@onready var death_particles: CPUParticles2D = $DeathParticles
 
 
 #Statemachine
@@ -44,11 +47,13 @@ signal cannot_transmute
 @export_range(0.0, 1.0) var deaccel : float = 0.5
 @export var gravity : float = 20
 
+@export var is_dead : bool = false
 var can_push : bool = true
 var direction : Vector2
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	reset_count = 0
+	SceneTransition.transition_out()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -62,14 +67,25 @@ func _process(delta: float) -> void:
 		reset_count = 0
 		
 	if reset_count >= 50:
+		reset_count = 0
+		SceneTransition.transition_in()
+		#await(get_tree().create_timer(1).timeout)
 		get_tree().reload_current_scene()
+
 	
 func _physics_process(delta: float) -> void:
-	if msm.state != get_node("MovementStateMachine/OnLadder"):
-		apply_gravity()
-	movement()
-	handle_ladder()
-	move_and_slide()
+	if is_dead == false:
+		movement()
+		handle_ladder()
+		move_and_slide()
+		if msm.state != get_node("MovementStateMachine/OnLadder"):
+			apply_gravity()
+	else:
+		death_particles.emitting = true
+		sprite_base.hide()
+		stand_shape.set_deferred("disabled", true)
+		await(get_tree().create_timer(1).timeout)
+		get_tree().reload_current_scene()
 	
 	if not hat_ray_cast.is_colliding():
 		player_sprite.play(current_state)
@@ -112,8 +128,9 @@ func check_push():
 		if push_ray_cast.is_colliding() and msm.state == get_node("MovementStateMachine/Push"):
 			var box = push_ray_cast.get_collider()
 			#await(get_tree().create_timer(1).timeout)
-			if Input.is_action_pressed("push"):
-				box.push(direction)
+			if box != null:
+				if Input.is_action_pressed("push"):
+					box.push(direction)
 		elif not push_ray_cast.is_colliding() and msm.state == get_node("MovementStateMachine/Push"):
 			if Input.is_action_pressed("push"):
 				pass
@@ -146,4 +163,4 @@ func _on_max_transmute_area_area_exited(area: Area2D) -> void:
 
 
 func _on_death_area_body_entered(body: Node2D) -> void:
-	get_tree().reload_current_scene()
+	is_dead = true

@@ -14,7 +14,7 @@ func enter(_msg := {}) -> void:
 	tween.tween_property(self, "player:player_sprite:position:y",  0, 0.09)
 	
 func update(_delta: float) -> void:
-	
+	player.staff_sprite.frame = 0
 	if Input.is_action_pressed("up") or Input.is_action_pressed("down"):
 		player.current_state = &"OnLadder"
 	else:

@@ -21,4 +21,4 @@ func _on_exit_area_body_entered(body: Node2D) -> void:
 	if can_win == true:
 		if body.is_in_group("Player"):
 			has_won_signal.emit()
-			body.queue_free()
+			body.hide()

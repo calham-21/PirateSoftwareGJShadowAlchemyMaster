@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://crtdhgwxbvyfg"]
+[gd_scene load_steps=6 format=3 uid="uid://crtdhgwxbvyfg"]
 
 [ext_resource type="Script" path="res://ui/main_menu/main_menu.gd" id="1_a3gri"]
 [ext_resource type="Texture2D" uid="uid://byvn6xay2piny" path="res://assets/ui/background_level.png" id="2_3702w"]
+[ext_resource type="Texture2D" uid="uid://caofc06ey54ns" path="res://assets/ui/title.png" id="3_mb5p4"]
 [ext_resource type="FontFile" uid="uid://cjquf7ujps7au" path="res://assets/font/EditUndoBrk-RwaV.ttf" id="3_v88n8"]
+[ext_resource type="Texture2D" uid="uid://drtndpbylowlv" path="res://assets/ui/button.png" id="4_1qwse"]
 
 [node name="MainMenu" type="PanelContainer"]
 self_modulate = Color(1, 1, 1, 0)
@@ -13,27 +15,75 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_a3gri")
 
-[node name="MarginContainer2" type="MarginContainer" parent="."]
+[node name="BackgroundMarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer2"]
+[node name="TextureRect" type="TextureRect" parent="BackgroundMarginContainer"]
 layout_mode = 2
 texture = ExtResource("2_3702w")
 expand_mode = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="TitleMarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
 theme_override_constants/margin_left = 64
-theme_override_constants/margin_top = 64
+theme_override_constants/margin_top = 48
 theme_override_constants/margin_right = 64
-theme_override_constants/margin_bottom = 64
+theme_override_constants/margin_bottom = 48
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TitleMarginContainer"]
 layout_mode = 2
 
-[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="TitleMarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+texture = ExtResource("3_mb5p4")
+stretch_mode = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="TitleMarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 200
+theme_override_constants/margin_top = 160
+theme_override_constants/margin_right = 200
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TitleMarginContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = -3
+
+[node name="PlayButton" type="Button" parent="TitleMarginContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_v88n8")
-theme_override_font_sizes/font_size = 64
-text = "Alchemerge"
-horizontal_alignment = 1
+theme_override_font_sizes/font_size = 30
+icon = ExtResource("4_1qwse")
+flat = true
+icon_alignment = 1
+
+[node name="CreditButton" type="Button" parent="TitleMarginContainer/MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_v88n8")
+theme_override_font_sizes/font_size = 30
+text = "CREDITS"
+icon = ExtResource("4_1qwse")
+flat = true
+icon_alignment = 1
+
+[node name="ExitButton" type="Button" parent="TitleMarginContainer/MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_v88n8")
+theme_override_font_sizes/font_size = 30
+text = "EXIT"
+icon = ExtResource("4_1qwse")
+flat = true
+icon_alignment = 1
+
+[connection signal="mouse_entered" from="TitleMarginContainer/MarginContainer/VBoxContainer/PlayButton" to="." method="_on_play_button_mouse_entered"]
+[connection signal="mouse_exited" from="TitleMarginContainer/MarginContainer/VBoxContainer/PlayButton" to="." method="_on_play_button_mouse_exited"]
+[connection signal="pressed" from="TitleMarginContainer/MarginContainer/VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="mouse_entered" from="TitleMarginContainer/MarginContainer/VBoxContainer/CreditButton" to="." method="_on_credit_button_mouse_entered"]
+[connection signal="mouse_exited" from="TitleMarginContainer/MarginContainer/VBoxContainer/CreditButton" to="." method="_on_credit_button_mouse_exited"]
+[connection signal="mouse_entered" from="TitleMarginContainer/MarginContainer/VBoxContainer/ExitButton" to="." method="_on_exit_button_mouse_entered"]
+[connection signal="mouse_exited" from="TitleMarginContainer/MarginContainer/VBoxContainer/ExitButton" to="." method="_on_exit_button_mouse_exited"]
+[connection signal="pressed" from="TitleMarginContainer/MarginContainer/VBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]

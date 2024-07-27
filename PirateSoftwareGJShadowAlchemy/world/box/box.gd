@@ -12,12 +12,15 @@ extends CharacterBody2D
 @onready var tr_tr: RayCast2D = $ExtraTransmuteRays/TransmuteRaycastTR
 
 
+@onready var crush_area: Area2D = $CrushArea
+@onready var crush_area_shape: CollisionShape2D = $CrushArea/Shape
 
 
 @onready var bb_raycast: RayCast2D = $BoxBelowRayCast
 @onready var terrain_raycast: RayCast2D = $TerrainRaycast
 @onready var push_particles: CPUParticles2D = $PushParticles
 @onready var player_raycast: RayCast2D = $PlayerRaycast
+@onready var enemy_raycast: RayCast2D = $EnemyRaycast
 
 
 @onready var copper_ray: Node2D = $CopperRaycasts
@@ -49,7 +52,7 @@ var box_type : String
 
 
 func _ready() -> void:
-	print(box_type)
+	pass
 	
 
 func _process(delta: float) -> void:
@@ -65,9 +68,11 @@ func push(vel: Vector2) -> bool:
 	#Push logic. Gets velocity and normalises it to get direction.
 	#Times that dir with grid size to find the new position the box will be pushed too.
 	var vel_norm = vel.normalized()
+		
 	var new_pos = vel_norm * grid_size
 	#Raycast that points at the new posiition.
 	raycast.target_position = new_pos
+	
 	#Forces raycast to update to check if new pos is empty.
 	raycast.force_raycast_update()
 	
@@ -104,8 +109,12 @@ func push(vel: Vector2) -> bool:
 
 func _physics_process(delta: float) -> void:
 	#If box is not stone, fall.
-	#if velocity.y > 0:
-		#is_conducting = false
+	if velocity.y > 0:
+		crush_area.set_disable_mode(CollisionObject2D.DISABLE_MODE_REMOVE)
+		crush_area_shape.call_deferred("set_disabled", false)
+	else:
+		crush_area.set_disable_mode(CollisionObject2D.DISABLE_MODE_KEEP_ACTIVE)
+		crush_area_shape.call_deferred("set_disabled", true)
 	if box_type == "Dirt" or box_type == "Copper" or box_type == "Sodium" or box_type == "Gold":
 		velocity.y += gravity
 	elif box_type == "Lead": #Fall stronger for lead
@@ -240,5 +249,8 @@ func copper_logic():
 	#----------------------------------------------------------------------------------------------------
 func sodium_logic():
 	if terrain_raycast.is_colliding():
-		print("explode")
 		queue_free()
+
+
+func _on_crush_area_body_entered(body: Node2D) -> void:
+	body.is_dead = true
