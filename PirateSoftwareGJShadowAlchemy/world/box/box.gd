@@ -52,7 +52,7 @@ var box_type : String
 
 
 func _ready() -> void:
-	pass
+	crush_area_shape.call_deferred("set_disabled", true)
 	
 
 func _process(delta: float) -> void:

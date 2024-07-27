@@ -12,7 +12,7 @@ extends CharacterBody2D
 @onready var crush_ray: RayCast2D = $CrushRay
 @onready var crush_ray2: RayCast2D = $CrushRay2
 
-
+@export var is_facing_left : bool = false
 var is_dead : bool = false
 
 # Called when the node enters the scene tree for the first time.
@@ -22,6 +22,10 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	if is_facing_left == true:
+		face_fire_particles.gravity.x = -55
+	else:
+		face_fire_particles.gravity.x = 55
 	sprite.play("Idle")
 	
 	if crush_ray.is_colliding() and crush_ray2.is_colliding():
@@ -29,11 +33,13 @@ func _process(delta: float) -> void:
 	
 	if box_raycast.is_colliding():
 		death_shape.set_deferred("disabled", true)
-		face_fire_particles.emitting = false
+		face_fire_particles.z_index = -1
+		face_fire_particles.lifetime = 1.25
 		
 	else:
 		death_shape.set_deferred("disabled", false)
-		face_fire_particles.emitting = true
+		face_fire_particles.z_index = 5
+		face_fire_particles.lifetime = 1.5
 		
 	if is_dead == true:
 		death_particles.emitting = true

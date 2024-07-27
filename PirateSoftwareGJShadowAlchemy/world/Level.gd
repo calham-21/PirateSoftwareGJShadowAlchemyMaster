@@ -24,6 +24,7 @@ var can_transmute : bool = false
 
 var reset_count : int = 0
 
+
 @export var is_tutorial : bool = false
 @onready var arrow_key_tutorial: Sprite2D = $ArrowKeyTutorial
 @onready var wasd_key_tutorial: Sprite2D = $WASDKeyTutorial
@@ -207,7 +208,7 @@ func transmute(vel: Vector2):
 	var vel_norm = vel.normalized()
 	print(vel_norm)
 	var new_pos = vel_norm * grid_size
-	selected_box.transmute_raycast.target_position = new_pos*1.45
+	selected_box.transmute_raycast.target_position = new_pos*1.48
 	selected_box.transmute_raycast.force_raycast_update()
 		
 	#for t_ray in selected_box.extra_transmute_rays.get_children():

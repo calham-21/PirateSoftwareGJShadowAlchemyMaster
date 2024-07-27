@@ -14,13 +14,13 @@ particles_anim_v_frames = 2
 particles_anim_loop = true
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_efviu"]
-size = Vector2(20, 32)
+size = Vector2(20, 18)
 
 [node name="Box" type="CharacterBody2D" groups=["Box"]]
 collision_layer = 8
 collision_mask = 75
 slide_on_ceiling = false
-platform_floor_layers = 4294967041
+platform_floor_layers = 4294967105
 script = ExtResource("1_4aqcv")
 is_conducting = false
 sliding_time = 0.2
@@ -146,7 +146,8 @@ collision_layer = 0
 collision_mask = 6
 
 [node name="Shape" type="CollisionShape2D" parent="CrushArea"]
-position = Vector2(0, 15)
+position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_efviu")
+disabled = true
 
 [connection signal="body_entered" from="CrushArea" to="." method="_on_crush_area_body_entered"]
