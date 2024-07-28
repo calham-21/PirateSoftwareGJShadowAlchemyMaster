@@ -53,7 +53,7 @@ colors = PackedColorArray(0.609305, 0, 0.0953671, 1, 1, 0.027451, 0.254902, 1, 1
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5xjib"]
 size = Vector2(52, 22)
 
-[node name="Enemy" type="CharacterBody2D"]
+[node name="Enemy" type="CharacterBody2D" groups=["Enemy"]]
 collision_layer = 4
 collision_mask = 73
 script = ExtResource("1_ea340")

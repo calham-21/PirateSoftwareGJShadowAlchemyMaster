@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3 uid="uid://dsa6yivglxkxy"]
+
+[ext_resource type="Texture2D" uid="uid://byvn6xay2piny" path="res://assets/ui/background_level.png" id="1_fjqxj"]
+[ext_resource type="Texture2D" uid="uid://caofc06ey54ns" path="res://assets/ui/title.png" id="2_t654n"]
+
+[node name="Control" type="Control"]
+custom_minimum_size = Vector2(630, 500)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(630, 500)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_fjqxj")
+expand_mode = 1
+
+[node name="MarginContainer2" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 216.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer2"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+texture = ExtResource("2_t654n")
+expand_mode = 1
+stretch_mode = 2

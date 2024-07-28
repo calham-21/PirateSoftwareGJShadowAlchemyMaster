@@ -1,8 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://oretaw7o7q10"]
+[gd_scene load_steps=17 format=3 uid="uid://oretaw7o7q10"]
 
 [ext_resource type="Script" path="res://world/box/box.gd" id="1_4aqcv"]
 [ext_resource type="Texture2D" uid="uid://cesarlkkxojsx" path="res://assets/box/box.png" id="2_8ipqx"]
 [ext_resource type="Texture2D" uid="uid://crpq2sdqwr3ok" path="res://assets/box/box_push_particles.png" id="3_jhpn4"]
+[ext_resource type="Texture2D" uid="uid://k41nfj3dyfyq" path="res://assets/particle/explosion_particle.png" id="4_3efld"]
+[ext_resource type="Texture2D" uid="uid://cb7bxn1cuumuo" path="res://assets/particle/player_death_particle.png" id="5_t5203"]
+[ext_resource type="AudioStream" uid="uid://v4d883d0283" path="res://audio/sfx/DeathFlash.mp3" id="6_smq8e"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5yy2n"]
 size = Vector2(31.5, 31.75)
@@ -16,11 +19,45 @@ particles_anim_loop = true
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_efviu"]
 size = Vector2(20, 18)
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_gdwb6"]
+particles_animation = true
+particles_anim_h_frames = 3
+particles_anim_v_frames = 2
+particles_anim_loop = false
+
+[sub_resource type="Gradient" id="Gradient_yp8ll"]
+offsets = PackedFloat32Array(0, 0.113333, 0.213333, 0.413333)
+colors = PackedColorArray(1, 0.606837, 0.397916, 1, 1, 0.776471, 0.34902, 1, 1, 0.423529, 0, 1, 1, 0.219608, 0, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_hjkr6"]
+particles_animation = true
+particles_anim_h_frames = 2
+particles_anim_v_frames = 2
+particles_anim_loop = false
+
+[sub_resource type="Gradient" id="Gradient_t70xl"]
+offsets = PackedFloat32Array(0.0533333, 0.166667, 0.413333, 0.606667, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 0.564706, 0, 1, 1, 0.835294, 0.54902, 1, 1, 0.789096, 0.455285, 1, 1, 0.956863, 0.494118, 1)
+
+[sub_resource type="Gradient" id="Gradient_ub2d1"]
+colors = PackedColorArray(0.194349, 0.194349, 0.194349, 1, 0.572988, 0.572988, 0.572988, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sqqng"]
+size = Vector2(116, 110)
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_gu2jh"]
+random_pitch = 1.2
+random_volume_offset_db = 1.19
+streams_count = 1
+stream_0/stream = ExtResource("6_smq8e")
+stream_0/weight = 1.0
+
 [node name="Box" type="CharacterBody2D" groups=["Box"]]
 collision_layer = 8
 collision_mask = 75
 slide_on_ceiling = false
 platform_floor_layers = 4294967105
+safe_margin = 0.06
 script = ExtResource("1_4aqcv")
 is_conducting = false
 sliding_time = 0.2
@@ -45,7 +82,7 @@ collision_mask = 9
 [node name="TransmuteRaycast" type="RayCast2D" parent="."]
 position = Vector2(16, 16)
 target_position = Vector2(0, 36)
-collision_mask = 11
+collision_mask = 15
 hit_from_inside = true
 
 [node name="ExtraTransmuteRays" type="Node2D" parent="."]
@@ -83,8 +120,9 @@ hit_from_inside = true
 [node name="TerrainRaycast" type="RayCast2D" parent="."]
 position = Vector2(16, 2)
 target_position = Vector2(0, 24)
-collision_mask = 16
+collision_mask = 1040
 hit_from_inside = true
+collide_with_areas = true
 
 [node name="PlayerRaycast" type="RayCast2D" parent="."]
 position = Vector2(16, 16)
@@ -149,5 +187,86 @@ collision_mask = 6
 position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_efviu")
 disabled = true
+
+[node name="ExplosionParticles" type="CPUParticles2D" parent="."]
+material = SubResource("CanvasItemMaterial_gdwb6")
+position = Vector2(16, 16)
+emitting = false
+amount = 25
+lifetime = 0.8
+explosiveness = 1.0
+texture = ExtResource("4_3efld")
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 250.0
+initial_velocity_max = 300.0
+damping_min = 4.04
+damping_max = 10.101
+angle_min = -720.0
+scale_amount_min = 0.6
+scale_amount_max = 0.8
+color_ramp = SubResource("Gradient_yp8ll")
+anim_speed_min = 5.0
+anim_speed_max = 5.0
+
+[node name="ExplosionParticles2" type="CPUParticles2D" parent="."]
+z_index = 5
+material = SubResource("CanvasItemMaterial_hjkr6")
+position = Vector2(16, 16)
+emitting = false
+amount = 64
+one_shot = true
+explosiveness = 1.0
+randomness = 0.55
+lifetime_randomness = 0.4
+texture = ExtResource("5_t5203")
+spread = 180.0
+initial_velocity_min = 313.14
+initial_velocity_max = 676.42
+angle_min = -494.5
+angle_max = 389.1
+scale_amount_min = 0.5
+scale_amount_max = 0.8
+color_ramp = SubResource("Gradient_t70xl")
+anim_speed_min = 0.8
+anim_speed_max = 1.0
+
+[node name="ExplosionParticles3" type="CPUParticles2D" parent="."]
+material = SubResource("CanvasItemMaterial_gdwb6")
+position = Vector2(16, 16)
+emitting = false
+amount = 24
+lifetime = 2.0
+one_shot = true
+explosiveness = 1.0
+lifetime_randomness = 0.54
+texture = ExtResource("4_3efld")
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 250.0
+initial_velocity_max = 250.0
+damping_min = 4.04
+damping_max = 10.101
+angle_min = -720.0
+scale_amount_min = 0.6
+scale_amount_max = 0.8
+color_ramp = SubResource("Gradient_ub2d1")
+anim_speed_min = 5.0
+anim_speed_max = 5.0
+
+[node name="ExplosionArea" type="Area2D" parent="."]
+position = Vector2(16, 16)
+collision_mask = 14
+
+[node name="ExplosionShape" type="CollisionShape2D" parent="ExplosionArea"]
+shape = SubResource("RectangleShape2D_sqqng")
+debug_color = Color(0, 0.6, 0.701961, 0)
+
+[node name="ExplosionAudio" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(16, 16)
+stream = SubResource("AudioStreamRandomizer_gu2jh")
+volume_db = 2.972
 
 [connection signal="body_entered" from="CrushArea" to="." method="_on_crush_area_body_entered"]

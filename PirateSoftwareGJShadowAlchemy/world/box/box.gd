@@ -3,6 +3,7 @@ extends CharacterBody2D
 
 @onready var sprite: Sprite2D = $Sprite
 @onready var raycast: RayCast2D = $RayCast
+@onready var collision_shape: CollisionShape2D = $CollisionShape
 
 @onready var transmute_raycast: RayCast2D = $TransmuteRaycast
 @onready var extra_transmute_rays: Node2D = $ExtraTransmuteRays
@@ -30,6 +31,13 @@ extends CharacterBody2D
 @onready var cr_right: RayCast2D = $CopperRaycasts/ConductRaycastRight
 
 
+@onready var explosion_particles: CPUParticles2D = $ExplosionParticles
+@onready var explosion_particles2: CPUParticles2D = $ExplosionParticles2
+@onready var explosion_particles3: CPUParticles2D = $ExplosionParticles3
+@onready var explosion_area: Area2D = $ExplosionArea
+@onready var explosion_shape: CollisionShape2D = $ExplosionArea/ExplosionShape
+@onready var explosion_audio: AudioStreamPlayer2D = $ExplosionAudio
+
 
 @export var grid_size : int = 32
 
@@ -46,7 +54,7 @@ var box_type : String
 @export var gravity : float
 @export var strong_gravity : float
 
-
+var can_explode : bool = false
 # Called when the node enters the scene tree for the first time.
 
 
@@ -153,7 +161,7 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func copper_logic():
-
+	
 	#Evil code. Beware.
 	##BOX
 	if cr_up.is_colliding():
@@ -248,9 +256,30 @@ func copper_logic():
 				is_conducting = false
 	#----------------------------------------------------------------------------------------------------
 func sodium_logic():
-	if terrain_raycast.is_colliding():
-		queue_free()
-
+	if terrain_raycast.is_colliding() or can_explode == true:
+		explosion_audio.play()
+		explosion_particles.emitting = true
+		explosion_particles2.emitting = true
+		explosion_particles3.emitting = true
+		collision_shape.set_deferred("disabled", true)
+		sprite.hide()
+		for over_lap in explosion_area.get_overlapping_bodies():
+			if over_lap != null:
+				if over_lap.is_in_group("Box"):
+					if over_lap.box_type == "Lead" and over_lap != self:
+						pass
+					elif over_lap.box_type == "Sodium" and over_lap != self:
+						await(get_tree().create_timer(0.05).timeout)
+						over_lap.can_explode = true
+					else:
+						if over_lap != self:
+							over_lap.queue_free()
+						
+				elif over_lap.is_in_group("Player") or over_lap.is_in_group("Enemy"):
+					over_lap.is_dead = true
+		if explosion_particles2.emitting == false:
+			explosion_audio.stop()
+			queue_free()
 
 func _on_crush_area_body_entered(body: Node2D) -> void:
 	body.is_dead = true

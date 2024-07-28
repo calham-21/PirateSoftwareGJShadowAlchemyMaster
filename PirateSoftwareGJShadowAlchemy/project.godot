@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 SceneTransition="*res://global/scene_transition.tscn"
+BgMusicManager="*res://audio/scene/BGMusicManager.tscn"
 
 [display]
 
@@ -106,6 +107,8 @@ reset={
 2d_physics/layer_7="DropThrough"
 2d_physics/layer_8="SelectSpace"
 2d_physics/layer_9="Death"
+2d_physics/layer_10="Boundary"
+2d_physics/layer_11="CausesExplosion"
 
 [rendering]
 

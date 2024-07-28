@@ -30,10 +30,15 @@ vframes = 8
 z_index = -1
 material = SubResource("CanvasItemMaterial_q8p6y")
 position = Vector2(15, 14)
+emitting = false
 amount = 14
 lifetime = 1.5
 texture = ExtResource("3_dvp87")
-gravity = Vector2(0, 55)
+direction = Vector2(0, 1)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 45.0
+initial_velocity_max = 45.0
 linear_accel_min = 0.8
 linear_accel_max = 1.0
 angle_min = -283.4
@@ -53,11 +58,6 @@ target_position = Vector2(0, -30)
 collision_mask = 8
 hit_from_inside = true
 
-[node name="Down" type="RayCast2D" parent="DetectionRaycasts"]
-target_position = Vector2(0, 30)
-collision_mask = 8
-hit_from_inside = true
-
 [node name="Left" type="RayCast2D" parent="DetectionRaycasts"]
 target_position = Vector2(-30, 0)
 collision_mask = 8
@@ -70,11 +70,12 @@ hit_from_inside = true
 
 [node name="DeathArea" type="Area2D" parent="."]
 position = Vector2(16, 40)
-collision_layer = 0
-collision_mask = 6
+collision_layer = 1280
+collision_mask = 14
 
 [node name="Shape" type="CollisionShape2D" parent="DeathArea"]
 position = Vector2(0, 2)
 shape = SubResource("RectangleShape2D_cou0c")
+disabled = true
 
 [connection signal="body_entered" from="DeathArea" to="." method="_on_death_area_body_entered"]

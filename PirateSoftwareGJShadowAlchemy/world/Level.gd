@@ -275,7 +275,7 @@ func transmute(vel: Vector2):
 			#COMBINE INTO ONE
 			elif selected_box.transmute_raycast.is_colliding() and selected_box.is_sliding == false:
 				print("Yep2")
-				if selected_box.is_on_floor() or selected_box.bb_raycast.is_colliding():
+				if selected_box.is_on_floor() or selected_box.bb_raycast.is_colliding() and selected_box.box_type != "Gold":
 					if selected_box.transmute_raycast.get_collider().is_in_group("Box"):
 						var other_box = selected_box.transmute_raycast.get_collider()
 						if selected_box.box_type == other_box.box_type and other_box.is_sliding == false: 
