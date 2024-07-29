@@ -70,8 +70,9 @@ stream_0/weight = 1.0
 [node name="Box" type="CharacterBody2D" groups=["Box"]]
 collision_layer = 8
 collision_mask = 75
+platform_on_leave = 2
 platform_floor_layers = 4294967105
-safe_margin = 0.06
+safe_margin = 0.001
 script = ExtResource("1_4aqcv")
 is_conducting = false
 sliding_time = 0.2
@@ -98,10 +99,6 @@ position = Vector2(16, 16)
 target_position = Vector2(0, 36)
 collision_mask = 15
 hit_from_inside = true
-
-[node name="PlayerTransmuteRaycast" type="RayCast2D" parent="."]
-position = Vector2(16, 16)
-collision_mask = 6
 
 [node name="FallingRaycast" type="RayCast2D" parent="."]
 position = Vector2(16, 17)
@@ -282,6 +279,7 @@ anim_speed_min = 5.0
 anim_speed_max = 5.0
 
 [node name="ExplosionArea" type="Area2D" parent="."]
+visible = false
 position = Vector2(16, 16)
 collision_mask = 14
 

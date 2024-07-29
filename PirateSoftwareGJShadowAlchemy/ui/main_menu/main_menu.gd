@@ -26,7 +26,7 @@ func _on_play_button_mouse_exited() -> void:
 func _on_play_button_pressed() -> void:
 	SceneTransition.transition_in()
 	await(get_tree().create_timer(1).timeout)
-	get_tree().change_scene_to_file("res://level/testing/test_level.tscn")
+	get_tree().change_scene_to_file("res://level/levels/Level1.tscn")
 
 
 func _on_credit_button_mouse_entered() -> void:

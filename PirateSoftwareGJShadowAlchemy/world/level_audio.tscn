@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://bn5ibqicwkg1p"]
 
 [ext_resource type="Script" path="res://world/level_audio.gd" id="1_8ufrc"]
-[ext_resource type="AudioStream" uid="uid://c5ui1hqllhmn4" path="res://audio/sfx/transmute.ogg" id="2_wd2gj"]
+[ext_resource type="AudioStream" uid="uid://cgt5re4jr73ls" path="res://audio/sfx/push.ogg" id="2_tkxh0"]
 [ext_resource type="AudioStream" uid="uid://kpli53t2uibk" path="res://audio/sfx/cant_push.ogg" id="3_us5os"]
 [ext_resource type="AudioStream" uid="uid://7owpqnigjfk" path="res://audio/sfx/select_block.ogg" id="4_d1tcc"]
 [ext_resource type="AudioStream" uid="uid://dtbo8a5jnmld" path="res://audio/sfx/cant_select_block.ogg" id="5_1p467"]
@@ -9,7 +9,7 @@
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_8rmcc"]
 random_pitch = 1.2
 streams_count = 1
-stream_0/stream = ExtResource("2_wd2gj")
+stream_0/stream = ExtResource("2_tkxh0")
 stream_0/weight = 1.0
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_xm543"]
@@ -34,8 +34,8 @@ script = ExtResource("1_8ufrc")
 
 [node name="TransmuteAudio" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamRandomizer_8rmcc")
-volume_db = -10.0
-pitch_scale = 0.85
+volume_db = -16.0
+pitch_scale = 1.8
 
 [node name="CantTransmuteAudio" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamRandomizer_xm543")

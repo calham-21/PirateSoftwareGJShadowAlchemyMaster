@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://ctcjp6dhcrnpx"]
+[gd_scene load_steps=10 format=3 uid="uid://ctcjp6dhcrnpx"]
 
 [ext_resource type="Script" path="res://world/Level.gd" id="1_8m6on"]
 [ext_resource type="PackedScene" uid="uid://btfasgma1a3sm" path="res://entities/player/player.tscn" id="2_1pdt3"]
@@ -8,10 +8,11 @@
 [ext_resource type="PackedScene" uid="uid://c0mr0jme0pfrg" path="res://world/selected_space.tscn" id="6_1adkg"]
 [ext_resource type="PackedScene" uid="uid://dmp6wdd0ungw8" path="res://world/object/exit_object.tscn" id="7_5s7jp"]
 [ext_resource type="PackedScene" uid="uid://oretaw7o7q10" path="res://world/box/box.tscn" id="8_7kdyj"]
+[ext_resource type="PackedScene" uid="uid://dgv073w0ku76x" path="res://entities/enemies/enemy.tscn" id="9_6w6fp"]
 
-[node name="TestLevel5" type="Node2D"]
+[node name="Level4" type="Node2D"]
 script = ExtResource("1_8m6on")
-next_level_path = "res://level/testing/test_level_3.tscn"
+next_level_path = "res://level/levels/Level5.tscn"
 
 [node name="Exit" parent="." instance=ExtResource("7_5s7jp")]
 position = Vector2(288, 96)
@@ -45,3 +46,8 @@ box_type_index = 4
 [node name="Box4" parent="." instance=ExtResource("8_7kdyj")]
 position = Vector2(-96, -64)
 box_type_index = 1
+
+[node name="Enemy" parent="." instance=ExtResource("9_6w6fp")]
+position = Vector2(-17, 9)
+scale = Vector2(-1, 1)
+is_facing_left = true

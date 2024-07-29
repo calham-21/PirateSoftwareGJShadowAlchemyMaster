@@ -43,12 +43,12 @@ func _process(delta: float) -> void:
 	
 	if box_raycast.is_colliding():
 		death_shape.set_deferred("disabled", true)
-		face_fire_particles.z_index = -1
+		face_fire_particles.emitting = false
 		face_fire_particles.lifetime = 1.25
 		
 	else:
 		death_shape.set_deferred("disabled", false)
-		face_fire_particles.z_index = 5
+		face_fire_particles.emitting = true
 		face_fire_particles.lifetime = 1.5
 		
 	if is_dead == true:

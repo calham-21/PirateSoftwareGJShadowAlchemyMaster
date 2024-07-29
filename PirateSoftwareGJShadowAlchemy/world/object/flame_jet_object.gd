@@ -32,6 +32,9 @@ func _process(delta: float) -> void:
 				#	death_area.monitorable = false
 					#death_area.monitoring = false
 					death_area_shape.set_deferred("disabled", true)
+			else:
+				flame_particles.emitting = false
+				death_area_shape.set_deferred("disabled", true)
 				
 
 

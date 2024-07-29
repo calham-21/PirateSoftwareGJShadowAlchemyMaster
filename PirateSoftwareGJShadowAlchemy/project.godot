@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 SceneTransition="*res://global/scene_transition.tscn"
 BgMusicManager="*res://audio/scene/BGMusicManager.tscn"
+GlobalRunTimer="*res://global/GlobalRunTimer.tscn"
 
 [display]
 

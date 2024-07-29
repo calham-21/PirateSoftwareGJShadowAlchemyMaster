@@ -50,7 +50,6 @@ func win_handler():
 	SceneTransition.transition_in()
 	await(get_tree().create_timer(1).timeout)
 	get_tree().change_scene_to_file(next_level_path)
-	print("player has won")
 
 func _ready() -> void:
 	can_win = false
@@ -217,7 +216,8 @@ func transmute(vel: Vector2):
 	var vel_norm = vel.normalized()
 	print(vel_norm)
 	var new_pos = vel_norm * grid_size
-	selected_box.transmute_raycast.target_position = new_pos*1.48
+	selected_box.transmute_raycast.target_position = new_pos*1.4
+	selected_box.player_transmute_raycast.target_position = new_pos* 1.5
 	selected_box.transmute_raycast.force_raycast_update()
 		
 	#for t_ray in selected_box.extra_transmute_rays.get_children():
@@ -263,7 +263,7 @@ func transmute(vel: Vector2):
 		if selected_box.box_type != "Stone":
 			#NOT STONE SPECIFIC
 			#SPLIT INTO TWO
-			if !selected_box.transmute_raycast.is_colliding() and selected_box.is_sliding == false:
+			if !selected_box.transmute_raycast.is_colliding() and selected_box.is_sliding == false and !selected_box.player_transmute_raycast.is_colliding():
 				if selected_box.is_on_floor() or selected_box.bb_raycast.is_colliding():
 					if selected_box.box_type != "Dirt":
 						level_audio.can_transmute_audio.play()
@@ -289,7 +289,7 @@ func transmute(vel: Vector2):
 				if selected_box.is_on_floor() or selected_box.bb_raycast.is_colliding() and selected_box.box_type != "Gold":
 					if selected_box.transmute_raycast.get_collider().is_in_group("Box"):
 						var other_box = selected_box.transmute_raycast.get_collider()
-						if selected_box.box_type == other_box.box_type and other_box.is_sliding == false: 
+						if selected_box.box_type == other_box.box_type and other_box.is_sliding == false and other_box.box_type != "Gold": 
 							level_audio.can_transmute_audio.play()
 							var new_box = BOX.instantiate()
 							new_box.box_type_index = selected_box.box_type_index + 1
@@ -331,7 +331,7 @@ func transmute(vel: Vector2):
 		else:
 			#STONE
 			#SPLIT INTO TWO
-			if !selected_box.transmute_raycast.is_colliding() and selected_box.is_sliding == false:
+			if !selected_box.transmute_raycast.is_colliding() and selected_box.is_sliding == false  and !selected_box.player_transmute_raycast.is_colliding():
 				if selected_box.box_type != "Dirt":
 					level_audio.can_transmute_audio.play()
 					var new_box = BOX.instantiate()

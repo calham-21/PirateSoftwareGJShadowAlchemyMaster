@@ -1,0 +1,49 @@
+[gd_scene load_steps=5 format=3 uid="uid://b0b0q4w3qfdgl"]
+
+[ext_resource type="PackedScene" uid="uid://bls5cktpairl" path="res://global/speed_run_label.tscn" id="1_5jv2u"]
+[ext_resource type="Texture2D" uid="uid://dj2gok03swquv" path="res://assets/ui/congrats_message.png" id="1_8ka4f"]
+[ext_resource type="Script" path="res://level/misc/FinalScreen.gd" id="1_owcdo"]
+[ext_resource type="FontFile" uid="uid://cjquf7ujps7au" path="res://assets/font/EditUndoBrk-RwaV.ttf" id="2_6cv53"]
+
+[node name="FinalScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_owcdo")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="MarginContainer"]
+layout_mode = 2
+color = Color(0.666667, 0, 0.768627, 1)
+
+[node name="MarginContainer2" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_right = 456.0
+offset_bottom = 264.0
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer2"]
+layout_mode = 2
+texture = ExtResource("1_8ka4f")
+stretch_mode = 2
+
+[node name="SpeedRunLabel" parent="." instance=ExtResource("1_5jv2u")]
+z_index = 5
+layout_mode = 2
+offset_left = 184.0
+offset_top = 40.0
+offset_right = 288.0
+offset_bottom = 63.0
+theme_override_fonts/font = ExtResource("2_6cv53")
+theme_override_font_sizes/font_size = 32
+text = "
+"

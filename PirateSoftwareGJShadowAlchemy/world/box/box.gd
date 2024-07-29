@@ -6,6 +6,7 @@ extends CharacterBody2D
 @onready var collision_shape: CollisionShape2D = $CollisionShape
 
 @onready var transmute_raycast: RayCast2D = $TransmuteRaycast
+@onready var player_transmute_raycast: RayCast2D = $PlayerTransmuteRaycast
 @onready var extra_transmute_rays: Node2D = $ExtraTransmuteRays
 @onready var tr_bl: RayCast2D = $ExtraTransmuteRays/TransmuteRaycastBL
 @onready var tr_br: RayCast2D = $ExtraTransmuteRays/TransmuteRaycastBR
@@ -288,12 +289,16 @@ func copper_logic():
 				is_conducting = false
 	#----------------------------------------------------------------------------------------------------
 func sodium_logic():
+	var can_play : bool = true
 	if terrain_raycast.is_colliding() or can_explode == true:
 		falling_raycast.enabled = false
 		explosion_particles.emitting = true
 		explosion_particles2.emitting = true
 		explosion_particles3.emitting = true
-		collision_shape.set_deferred("disabled", true)
+		if not explosion_audio.is_playing() and can_play == true:
+			can_play = false
+			explosion_audio.play()
+		
 		sprite.hide()
 		for over_lap in explosion_area.get_overlapping_bodies():
 			if over_lap != null:
@@ -306,11 +311,11 @@ func sodium_logic():
 					else:
 						if over_lap != self:
 							over_lap.queue_free()
-						
 				elif over_lap.is_in_group("Player") or over_lap.is_in_group("Enemy"):
 					over_lap.is_dead = true
-		if explosion_particles2.emitting == false:
-			queue_free()
+					
+		collision_shape.set_deferred("disabled", true)
+
 
 func _on_crush_area_body_entered(body: Node2D) -> void:
 	body.is_dead = true
