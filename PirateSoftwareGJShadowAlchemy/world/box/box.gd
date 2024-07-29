@@ -22,6 +22,7 @@ extends CharacterBody2D
 @onready var push_particles: CPUParticles2D = $PushParticles
 @onready var player_raycast: RayCast2D = $PlayerRaycast
 @onready var enemy_raycast: RayCast2D = $EnemyRaycast
+@onready var falling_raycast: RayCast2D = $FallingRaycast
 
 
 @onready var copper_ray: Node2D = $CopperRaycasts
@@ -36,7 +37,13 @@ extends CharacterBody2D
 @onready var explosion_particles3: CPUParticles2D = $ExplosionParticles3
 @onready var explosion_area: Area2D = $ExplosionArea
 @onready var explosion_shape: CollisionShape2D = $ExplosionArea/ExplosionShape
+
+
+@onready var push_audio: AudioStreamPlayer = $PushAudio
 @onready var explosion_audio: AudioStreamPlayer2D = $ExplosionAudio
+@onready var cant_push_audio: AudioStreamPlayer = $CantPushAudio
+@onready var land_weak_audio: AudioStreamPlayer = $LandWeakAudio
+@onready var land_strong_audio: AudioStreamPlayer = $LandStrongAudio
 
 
 @export var grid_size : int = 32
@@ -92,6 +99,7 @@ func push(vel: Vector2) -> bool:
 		if !raycast.is_colliding() and is_sliding == false and is_on_floor():
 			push_particles.emitting = true
 			is_sliding = true
+			push_audio.play()
 			#Tween to push to new direction. First tween I have done. Pretty cool.
 			var tween = get_tree().create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
 			tween.tween_property(self, "position:x", position.x + new_pos.x, sliding_time)
@@ -100,35 +108,57 @@ func push(vel: Vector2) -> bool:
 			push_particles.emitting = false
 			is_sliding = false
 			return true
+		else:
+			cant_push_audio.play()
+			
 	#STONE LOGIC.
 	else:
 		if !raycast.is_colliding() and is_sliding == false:
 			push_particles.emitting = true
 			is_sliding = true
+			push_audio.play()
 			var tween = get_tree().create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
 			tween.tween_property(self, "position:x", position.x + new_pos.x, sliding_time)
 			await(tween.finished)
 			push_particles.emitting = false
 			is_sliding = false
 			return true
+		else:
+			cant_push_audio.play()
 	return false
 
 	
 
 func _physics_process(delta: float) -> void:
+	var is_landed : bool = false
 	#If box is not stone, fall.
 	if velocity.y > 0:
 		crush_area.set_disable_mode(CollisionObject2D.DISABLE_MODE_REMOVE)
 		crush_area_shape.call_deferred("set_disabled", false)
 	else:
+		
 		crush_area.set_disable_mode(CollisionObject2D.DISABLE_MODE_KEEP_ACTIVE)
 		crush_area_shape.call_deferred("set_disabled", true)
-	if box_type == "Dirt" or box_type == "Copper" or box_type == "Sodium" or box_type == "Gold":
-		velocity.y += gravity
-	elif box_type == "Lead": #Fall stronger for lead
-		velocity.y += strong_gravity
-	else:
-		velocity.y = 0
+		
+	if not is_on_floor():
+		if falling_raycast.is_colliding():
+			if is_landed == false:
+				if not land_strong_audio.is_playing() or not land_weak_audio.is_playing():
+					is_landed = true
+					if box_type != "Lead" and box_type != "Stone":
+						land_weak_audio.play()
+					elif box_type == "Lead":
+						land_strong_audio.play()
+					#await(get_tree().create_timer(0.8).timeout)
+					is_landed = false
+		
+		if box_type == "Dirt" or box_type == "Copper" or box_type == "Sodium" or box_type == "Gold":
+			velocity.y += gravity
+		elif box_type == "Lead": #Fall stronger for lead
+			velocity.y += strong_gravity
+		else:
+			velocity.y = 0
+		
 	#Check box type. Originally sliding time was different for
 	#each box type. That sucked so keep the same.
 	#Handles box logic based on box type
@@ -158,7 +188,9 @@ func _physics_process(delta: float) -> void:
 		sliding_time = 0.25
 		touching_battery = false
 		is_conducting = false
-	move_and_slide()
+		
+	if box_type != "Stone":
+		move_and_slide()
 
 func copper_logic():
 	
@@ -257,7 +289,7 @@ func copper_logic():
 	#----------------------------------------------------------------------------------------------------
 func sodium_logic():
 	if terrain_raycast.is_colliding() or can_explode == true:
-		explosion_audio.play()
+		falling_raycast.enabled = false
 		explosion_particles.emitting = true
 		explosion_particles2.emitting = true
 		explosion_particles3.emitting = true
@@ -278,7 +310,6 @@ func sodium_logic():
 				elif over_lap.is_in_group("Player") or over_lap.is_in_group("Enemy"):
 					over_lap.is_dead = true
 		if explosion_particles2.emitting == false:
-			explosion_audio.stop()
 			queue_free()
 
 func _on_crush_area_body_entered(body: Node2D) -> void:

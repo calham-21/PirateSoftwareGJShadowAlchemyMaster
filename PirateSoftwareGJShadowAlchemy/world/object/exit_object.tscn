@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://dmp6wdd0ungw8"]
+[gd_scene load_steps=5 format=3 uid="uid://dmp6wdd0ungw8"]
 
 [ext_resource type="Script" path="res://world/object/exit_object.gd" id="1_66sre"]
 [ext_resource type="Texture2D" uid="uid://dupgv1fhylx5a" path="res://assets/object/exit_object.png" id="1_vft7f"]
+[ext_resource type="AudioStream" uid="uid://psr26khi4nxc" path="res://audio/sfx/gold_enter_door.ogg" id="3_00miw"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ndewe"]
 size = Vector2(32, 48)
@@ -22,5 +23,9 @@ collision_mask = 10
 [node name="ExitShape" type="CollisionShape2D" parent="ExitArea"]
 position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_ndewe")
+
+[node name="GoldEnterAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_00miw")
+volume_db = -16.0
 
 [connection signal="body_entered" from="ExitArea" to="." method="_on_exit_area_body_entered"]

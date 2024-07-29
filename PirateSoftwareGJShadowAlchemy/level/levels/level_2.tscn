@@ -1,6 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://dm4eng21fnmhf"]
+[gd_scene load_steps=10 format=3 uid="uid://dm4eng21fnmhf"]
 
 [ext_resource type="Script" path="res://world/Level.gd" id="1_akf2x"]
+[ext_resource type="PackedScene" uid="uid://bn5ibqicwkg1p" path="res://world/level_audio.tscn" id="2_8a2x6"]
 [ext_resource type="PackedScene" uid="uid://btfasgma1a3sm" path="res://entities/player/player.tscn" id="2_lj4dr"]
 [ext_resource type="PackedScene" uid="uid://c0mr0jme0pfrg" path="res://world/selected_space.tscn" id="3_hyrm4"]
 [ext_resource type="PackedScene" uid="uid://0f36gjl0ea28" path="res://world/terrain/tile_map.tscn" id="4_w0ucv"]
@@ -11,6 +12,9 @@
 
 [node name="Level2" type="Node2D"]
 script = ExtResource("1_akf2x")
+next_level_path = "res://level/levels/sodium_level.tscn"
+
+[node name="LevelAudio" parent="." instance=ExtResource("2_8a2x6")]
 
 [node name="Player" parent="." instance=ExtResource("2_lj4dr")]
 position = Vector2(-281, -123)

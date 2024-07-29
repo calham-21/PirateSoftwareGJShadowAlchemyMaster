@@ -1,9 +1,10 @@
-[gd_scene load_steps=17 format=3 uid="uid://dfy6y7ouve25a"]
+[gd_scene load_steps=16 format=3 uid="uid://dfy6y7ouve25a"]
 
 [ext_resource type="Script" path="res://world/Level.gd" id="1_hyc5s"]
 [ext_resource type="PackedScene" uid="uid://btfasgma1a3sm" path="res://entities/player/player.tscn" id="1_wm5k2"]
 [ext_resource type="PackedScene" uid="uid://0f36gjl0ea28" path="res://world/terrain/tile_map.tscn" id="2_0iiwb"]
 [ext_resource type="PackedScene" uid="uid://cnj43efnyvsny" path="res://world/level_camera.tscn" id="2_j0h8l"]
+[ext_resource type="PackedScene" uid="uid://bn5ibqicwkg1p" path="res://world/level_audio.tscn" id="2_kcsyq"]
 [ext_resource type="PackedScene" uid="uid://oretaw7o7q10" path="res://world/box/box.tscn" id="3_7ehay"]
 [ext_resource type="PackedScene" uid="uid://c0mr0jme0pfrg" path="res://world/selected_space.tscn" id="5_ontth"]
 [ext_resource type="PackedScene" uid="uid://dmp6wdd0ungw8" path="res://world/object/exit_object.tscn" id="6_6vmr4"]
@@ -14,15 +15,6 @@
 [ext_resource type="Texture2D" uid="uid://dp7wj66xn5txj" path="res://assets/ui/space_key_tutorial.png" id="12_pposg"]
 [ext_resource type="Texture2D" uid="uid://0jtyavoq7ig" path="res://assets/ui/gold_tutorial.png" id="13_p82lc"]
 
-[sub_resource type="Gradient" id="Gradient_kupb8"]
-offsets = PackedFloat32Array(0, 0.727273)
-colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_n1k17"]
-gradient = SubResource("Gradient_kupb8")
-fill = 1
-fill_from = Vector2(0.5, 0.5)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xtgja"]
 size = Vector2(35, 30.5)
 
@@ -30,6 +22,8 @@ size = Vector2(35, 30.5)
 script = ExtResource("1_hyc5s")
 next_level_path = "res://level/testing/test_level_2.tscn"
 is_tutorial = true
+
+[node name="LevelAudio" parent="." instance=ExtResource("2_kcsyq")]
 
 [node name="Player" parent="." instance=ExtResource("1_wm5k2")]
 position = Vector2(-176, 128)
@@ -56,12 +50,6 @@ position = Vector2(128, -32)
 
 [node name="WandPickUp" parent="." instance=ExtResource("7_m8xqm")]
 position = Vector2(73.02, 157.45)
-
-[node name="Light" type="PointLight2D" parent="."]
-visible = false
-position = Vector2(-148, 49)
-texture = SubResource("GradientTexture2D_n1k17")
-texture_scale = 2.8
 
 [node name="LevelCamera" parent="." instance=ExtResource("2_j0h8l")]
 
@@ -119,7 +107,7 @@ collision_layer = 0
 collision_mask = 128
 
 [node name="Shape" type="CollisionShape2D" parent="ArrowKeyArea2"]
-position = Vector2(0, -32)
+position = Vector2(0, 9)
 shape = SubResource("RectangleShape2D_xtgja")
 
 [connection signal="body_entered" from="SpaceKeyArea" to="." method="_on_space_key_area_body_entered"]

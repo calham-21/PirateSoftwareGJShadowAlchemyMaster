@@ -17,6 +17,10 @@ const BOX = preload("res://world/box/box.tscn")
 @onready var selected_space_sprite: Sprite2D = $SelectedSpace/SelectedSpaceSprite
 @onready var collision_shape: CollisionShape2D = $SelectedSpace/SelectedSpaceArea/CollisionShape
 @onready var exit: Node2D = $Exit
+
+@onready var level_audio: Node2D = $LevelAudio
+
+
 var can_shake : bool = false
 
 var can_select: bool = true
@@ -135,6 +139,7 @@ func selected_space_movement():
 		
 	if temp_box != null and can_transmute:
 			if Input.is_action_just_pressed("interact"):
+				level_audio.can_select_audio.play()
 				selected_space_sprite.frame = 0
 				player.staff_sprite.frame = 1
 				selected_box = temp_box
@@ -142,6 +147,7 @@ func selected_space_movement():
 	elif temp_box == null and !can_transmute:
 		if Input.is_action_just_pressed("interact") and can_shake == false:
 			can_shake = true
+			level_audio.cant_select_audio.play()
 			selected_space_sprite.frame = 3
 			player.staff_sprite.frame = 4
 			var current_pos = selected_space_sprite.position
@@ -153,6 +159,7 @@ func selected_space_movement():
 			can_shake = false
 	elif temp_box != null and !can_transmute:
 		if Input.is_action_just_pressed("interact") and can_shake == false:
+			level_audio.cant_select_audio.play()
 			can_shake = true
 			selected_space_sprite.frame = 3
 			player.staff_sprite.frame = 4
@@ -166,6 +173,7 @@ func selected_space_movement():
 			
 	if selected_box != null and can_shake == false:
 		if Input.is_action_just_pressed("cancel"):
+			level_audio.cant_select_audio.play()
 			selected_space_sprite.frame = 1
 			player.staff_sprite.frame = 2
 			selected_box = null
@@ -193,6 +201,7 @@ func selected_space_movement():
 	if selected_space == null and can_transmute == false:
 		if Input.is_action_just_pressed("interact") and can_shake == false:
 			can_shake = true
+			level_audio.cant_select_audio.play()
 			selected_space_sprite.frame = 1
 			player.staff_sprite.frame = 4
 			var current_pos = selected_space_sprite.position
@@ -219,6 +228,7 @@ func transmute(vel: Vector2):
 		if vel_norm == Vector2(0, -1):
 			print("cant push up cause on top")
 			if can_shake == false:
+				level_audio.cant_select_audio.play()
 				can_shake = true
 				selected_space_sprite.frame = 3
 				player.staff_sprite.frame = 4
@@ -235,6 +245,7 @@ func transmute(vel: Vector2):
 		if vel_norm == Vector2(0, 1):
 			print("cant push down cause beneath")
 			if can_shake == false:
+				level_audio.cant_select_audio.play()
 				can_shake = true
 				selected_space_sprite.frame = 3
 				player.staff_sprite.frame = 4
@@ -253,9 +264,9 @@ func transmute(vel: Vector2):
 			#NOT STONE SPECIFIC
 			#SPLIT INTO TWO
 			if !selected_box.transmute_raycast.is_colliding() and selected_box.is_sliding == false:
-				print("Yep")
 				if selected_box.is_on_floor() or selected_box.bb_raycast.is_colliding():
 					if selected_box.box_type != "Dirt":
+						level_audio.can_transmute_audio.play()
 						var new_box = BOX.instantiate()
 						new_box.box_type_index = selected_box.box_type_index - 1
 						new_box.position = selected_box.position + new_pos
@@ -263,6 +274,7 @@ func transmute(vel: Vector2):
 						selected_space.global_position = new_box.position
 						add_child(new_box)
 					else:
+						level_audio.cant_select_audio.play()
 						selected_space_sprite.frame = 3
 						player.staff_sprite.frame = 4
 						var current_pos = selected_space_sprite.position
@@ -274,11 +286,11 @@ func transmute(vel: Vector2):
 						
 			#COMBINE INTO ONE
 			elif selected_box.transmute_raycast.is_colliding() and selected_box.is_sliding == false:
-				print("Yep2")
 				if selected_box.is_on_floor() or selected_box.bb_raycast.is_colliding() and selected_box.box_type != "Gold":
 					if selected_box.transmute_raycast.get_collider().is_in_group("Box"):
 						var other_box = selected_box.transmute_raycast.get_collider()
 						if selected_box.box_type == other_box.box_type and other_box.is_sliding == false: 
+							level_audio.can_transmute_audio.play()
 							var new_box = BOX.instantiate()
 							new_box.box_type_index = selected_box.box_type_index + 1
 							new_box.position = other_box.position
@@ -290,6 +302,7 @@ func transmute(vel: Vector2):
 							#selected_box = new_box
 						else:
 							if can_shake == false:
+								level_audio.cant_select_audio.play()
 								can_shake = true
 								selected_space_sprite.frame = 3
 								player.staff_sprite.frame = 4
@@ -304,6 +317,7 @@ func transmute(vel: Vector2):
 					else:
 						if can_shake == false:
 							can_shake = true
+							level_audio.cant_select_audio.play()
 							selected_space_sprite.frame = 3
 							player.staff_sprite.frame = 4
 							selected_box = null
@@ -318,8 +332,8 @@ func transmute(vel: Vector2):
 			#STONE
 			#SPLIT INTO TWO
 			if !selected_box.transmute_raycast.is_colliding() and selected_box.is_sliding == false:
-				print("Yep3")
 				if selected_box.box_type != "Dirt":
+					level_audio.can_transmute_audio.play()
 					var new_box = BOX.instantiate()
 					new_box.box_type_index = selected_box.box_type_index - 1
 					new_box.position = selected_box.position + new_pos
@@ -329,10 +343,10 @@ func transmute(vel: Vector2):
 					#selected_box = new_box
 			#COMBINE INTO ONE
 			elif selected_box.transmute_raycast.is_colliding() and selected_box.is_sliding == false:
-				print("Yep4")
 				if selected_box.transmute_raycast.get_collider().is_in_group("Box"):
 					var other_box = selected_box.transmute_raycast.get_collider()
 					if selected_box.box_type == other_box.box_type and other_box.is_sliding == false: 
+						level_audio.can_transmute_audio.play()
 						var new_box = BOX.instantiate()
 						new_box.box_type_index = selected_box.box_type_index + 1
 						new_box.position = other_box.position
@@ -343,6 +357,7 @@ func transmute(vel: Vector2):
 						#selected_box = new_box
 					else:
 						if can_shake == false:
+							level_audio.cant_select_audio.play()
 							can_shake = true
 							selected_space_sprite.frame = 3
 							player.staff_sprite.frame = 4
@@ -356,6 +371,7 @@ func transmute(vel: Vector2):
 							can_shake = false
 				else: #Cant push
 					if can_shake == false:
+						level_audio.cant_select_audio.play()
 						can_shake = true
 						selected_space_sprite.frame = 3
 						player.staff_sprite.frame = 4

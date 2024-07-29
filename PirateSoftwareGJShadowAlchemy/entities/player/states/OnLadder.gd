@@ -1,12 +1,10 @@
 extends PlayerState
+var can_play : bool = true
+
 func enter(_msg := {}) -> void:
 	player.staff_sprite.frame = 0
 	player.staff_sprite.z_index = 4
-	#player.staff_sprite.hide()
 	player.current_state = &"OnLadderIdle"
-	#player.global_position.x = player.ladder_ray_down.get_collision_point().x + 16
-	#player.global_position.y -= 2
-	
 	var tween = get_tree().create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
 	tween.set_parallel(true)
 	tween.set_ease(tween.EASE_OUT)
@@ -17,6 +15,11 @@ func update(_delta: float) -> void:
 	player.staff_sprite.frame = 0
 	if Input.is_action_pressed("up") or Input.is_action_pressed("down"):
 		player.current_state = &"OnLadder"
+		if not player.footstep_audio.is_playing() and can_play == true:
+			can_play = false
+			player.footstep_audio.play()
+			await(get_tree().create_timer(0.35).timeout)
+			can_play = true
 	else:
 		player.current_state = &"OnLadderIdle"
 		
@@ -25,6 +28,7 @@ func update(_delta: float) -> void:
 		
 	if player.is_on_floor() and Input.is_action_pressed("down") and not player.drop_through_raycast.is_colliding():
 		state_machine.transition_to("Idle")
+		
 func physics_update(_delta: float) -> void:
 	pass
 	

@@ -38,5 +38,6 @@ func _process(delta: float) -> void:
 
 func _on_death_area_body_entered(body: Node2D) -> void:
 	if body.is_in_group("Player") or body.is_in_group("Enemy"):
+		body.play_death_audio
 		body.is_dead = true
 

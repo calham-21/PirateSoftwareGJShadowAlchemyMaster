@@ -15,9 +15,15 @@ extends CharacterBody2D
 @export var is_facing_left : bool = false
 var is_dead : bool = false
 
+
+@onready var death_audio: AudioStreamPlayer = $DeathAudio
+var can_play_audio : bool = true
+
+@onready var land_audio: AudioStreamPlayer = $LandAudio
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	pass
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -28,8 +34,12 @@ func _process(delta: float) -> void:
 		face_fire_particles.gravity.x = 55
 	sprite.play("Idle")
 	
-	if crush_ray.is_colliding() and crush_ray2.is_colliding():
+	if crush_ray.is_colliding() and crush_ray2.is_colliding() and can_play_audio:
+		if not death_audio.is_playing():
+			can_play_audio = false
+			death_audio.play()
 		is_dead = true
+		can_play_audio = false
 	
 	if box_raycast.is_colliding():
 		death_shape.set_deferred("disabled", true)
@@ -42,6 +52,9 @@ func _process(delta: float) -> void:
 		face_fire_particles.lifetime = 1.5
 		
 	if is_dead == true:
+		if not death_audio.is_playing() and can_play_audio == true:
+			can_play_audio = false
+			death_audio.play()
 		death_particles.emitting = true
 		face_fire_particles.emitting = false
 		sprite.hide()
@@ -49,6 +62,7 @@ func _process(delta: float) -> void:
 		death_shape.set_deferred("disabled", true)
 		if death_particles.emitting == false:
 			queue_free()
+	
 	
 			
 func _physics_process(delta: float) -> void:

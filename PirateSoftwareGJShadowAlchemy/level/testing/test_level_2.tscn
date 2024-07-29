@@ -1,6 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://cq0db45bxfb1v"]
+[gd_scene load_steps=10 format=3 uid="uid://cq0db45bxfb1v"]
 
 [ext_resource type="Script" path="res://world/Level.gd" id="1_5ng7a"]
+[ext_resource type="PackedScene" uid="uid://bn5ibqicwkg1p" path="res://world/level_audio.tscn" id="2_kipin"]
 [ext_resource type="PackedScene" uid="uid://0f36gjl0ea28" path="res://world/terrain/tile_map.tscn" id="2_r466u"]
 [ext_resource type="PackedScene" uid="uid://btfasgma1a3sm" path="res://entities/player/player.tscn" id="3_c67lk"]
 [ext_resource type="PackedScene" uid="uid://cnj43efnyvsny" path="res://world/level_camera.tscn" id="4_had6y"]
@@ -12,6 +13,8 @@
 [node name="TestLevel2" type="Node2D"]
 script = ExtResource("1_5ng7a")
 next_level_path = "res://level/testing/test_level_3.tscn"
+
+[node name="LevelAudio" parent="." instance=ExtResource("2_kipin")]
 
 [node name="LevelCamera" parent="." instance=ExtResource("4_had6y")]
 z_index = 2

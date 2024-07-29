@@ -2,6 +2,7 @@ extends Node2D
 signal can_win_signal
 signal has_won_signal
 @export var can_win : bool = false
+@onready var gold_enter_audio: AudioStreamPlayer = $GoldEnterAudio
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -17,6 +18,7 @@ func _on_exit_area_body_entered(body: Node2D) -> void:
 	if body.is_in_group("Box"):
 		if body.box_type == "Gold":
 			can_win_signal.emit()
+			gold_enter_audio.play()
 			body.queue_free()
 	if can_win == true:
 		if body.is_in_group("Player"):

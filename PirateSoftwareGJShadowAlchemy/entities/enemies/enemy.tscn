@@ -1,9 +1,11 @@
-[gd_scene load_steps=14 format=3 uid="uid://dgv073w0ku76x"]
+[gd_scene load_steps=17 format=3 uid="uid://dgv073w0ku76x"]
 
 [ext_resource type="Script" path="res://entities/enemies/enemy.gd" id="1_ea340"]
 [ext_resource type="Texture2D" uid="uid://b1idgtuqjrcuy" path="res://assets/enemy/enemy_bad_alchemist.png" id="2_isdsl"]
 [ext_resource type="Texture2D" uid="uid://cb7bxn1cuumuo" path="res://assets/particle/player_death_particle.png" id="3_en2i3"]
 [ext_resource type="Texture2D" uid="uid://b66dqb45brx7s" path="res://assets/particle/flame_particle.png" id="4_xu0kf"]
+[ext_resource type="AudioStream" uid="uid://bhqx37nfrv6lk" path="res://audio/sfx/enemy_death.ogg" id="5_li3po"]
+[ext_resource type="AudioStream" uid="uid://cs7p7h411p5th" path="res://audio/sfx/land.ogg" id="6_oivl7"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_k4sxq"]
 atlas = ExtResource("2_isdsl")
@@ -52,6 +54,12 @@ colors = PackedColorArray(0.609305, 0, 0.0953671, 1, 1, 0.027451, 0.254902, 1, 1
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5xjib"]
 size = Vector2(52, 22)
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_m6m8e"]
+random_pitch = 1.1
+streams_count = 1
+stream_0/stream = ExtResource("5_li3po")
+stream_0/weight = 1.0
 
 [node name="Enemy" type="CharacterBody2D" groups=["Enemy"]]
 collision_layer = 4
@@ -132,5 +140,13 @@ collision_mask = 9
 position = Vector2(0, 9)
 target_position = Vector2(-8, 0)
 collision_mask = 9
+
+[node name="DeathAudio" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamRandomizer_m6m8e")
+volume_db = -12.0
+pitch_scale = 0.9
+
+[node name="LandAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_oivl7")
 
 [connection signal="body_entered" from="DeathArea" to="." method="_on_death_area_body_entered"]

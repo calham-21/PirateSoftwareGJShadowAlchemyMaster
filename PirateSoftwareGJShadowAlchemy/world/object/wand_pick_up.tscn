@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://blmm1kvb1wbp4"]
+[gd_scene load_steps=5 format=3 uid="uid://blmm1kvb1wbp4"]
 
 [ext_resource type="Script" path="res://world/object/wand_pick_up.gd" id="1_4rpi7"]
 [ext_resource type="Texture2D" uid="uid://dlr2yelbhurfi" path="res://assets/player/staff.png" id="1_wckkc"]
+[ext_resource type="AudioStream" uid="uid://cc1nla5kceb1l" path="res://audio/sfx/wand_pickup.ogg" id="3_j8ok2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3y0th"]
 
@@ -19,5 +20,9 @@ collision_mask = 2
 
 [node name="WandShape" type="CollisionShape2D" parent="WandArea"]
 shape = SubResource("RectangleShape2D_3y0th")
+
+[node name="PickupAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_j8ok2")
+volume_db = -16.0
 
 [connection signal="body_entered" from="WandArea" to="." method="_on_wand_area_body_entered"]

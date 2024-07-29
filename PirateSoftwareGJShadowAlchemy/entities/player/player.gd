@@ -34,8 +34,15 @@ class_name Player
 #Statemachine
 @onready var msm: StateMachine = $MovementStateMachine
 
+#Audio
+@onready var footstep_audio: AudioStreamPlayer = $FootstepAudio
+@onready var death_audio: AudioStreamPlayer = $DeathAudio
+@onready var land_audio: AudioStreamPlayer = $LandAudio
+
+
 signal can_transmute
 signal cannot_transmute
+signal death_audio_signal
 
 #Player movement variables
 @export var has_staff : bool = true
@@ -48,10 +55,12 @@ signal cannot_transmute
 @export var gravity : float = 20
 
 @export var is_dead : bool = false
+var can_play : bool = true
 var can_push : bool = true
 var direction : Vector2
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	reset_count = 0
 	SceneTransition.transition_out()
 
@@ -81,6 +90,9 @@ func _physics_process(delta: float) -> void:
 		if msm.state != get_node("MovementStateMachine/OnLadder"):
 			apply_gravity()
 	else:
+		if not death_audio.is_playing() and can_play == true:
+			can_play = false
+			death_audio.play()
 		death_particles.emitting = true
 		sprite_base.hide()
 		stand_shape.set_deferred("disabled", true)
@@ -152,7 +164,10 @@ func handle_ladder():
 			else:
 				on_ladder = true
 				
-
+	
+func play_death_audio():
+	print("play")
+	death_audio.play()
 
 func _on_max_transmute_area_area_entered(area: Area2D) -> void:
 	can_transmute.emit()
@@ -163,4 +178,8 @@ func _on_max_transmute_area_area_exited(area: Area2D) -> void:
 
 
 func _on_death_area_body_entered(body: Node2D) -> void:
+	is_dead = true
+
+
+func _on_death_area_area_entered(area: Area2D) -> void:
 	is_dead = true

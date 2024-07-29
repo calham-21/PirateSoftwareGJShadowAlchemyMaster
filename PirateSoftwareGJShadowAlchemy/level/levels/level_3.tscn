@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://op37rjvqg1b5"]
+[gd_scene load_steps=11 format=3 uid="uid://op37rjvqg1b5"]
 
 [ext_resource type="Script" path="res://world/Level.gd" id="1_jse21"]
 [ext_resource type="PackedScene" uid="uid://btfasgma1a3sm" path="res://entities/player/player.tscn" id="2_q58hj"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://oretaw7o7q10" path="res://world/box/box.tscn" id="7_5nk35"]
 [ext_resource type="PackedScene" uid="uid://dhfrvifslx66r" path="res://world/object/flame_jet_object.tscn" id="8_ck0ur"]
 [ext_resource type="PackedScene" uid="uid://dgv073w0ku76x" path="res://entities/enemies/enemy.tscn" id="9_isuwg"]
+[ext_resource type="PackedScene" uid="uid://bn5ibqicwkg1p" path="res://world/level_audio.tscn" id="10_2307n"]
 
 [node name="Level3" type="Node2D"]
 script = ExtResource("1_jse21")
@@ -101,3 +102,5 @@ position = Vector2(-176, 106)
 
 [node name="Enemy" parent="." instance=ExtResource("9_isuwg")]
 position = Vector2(16, -122)
+
+[node name="LevelAudio" parent="." instance=ExtResource("10_2307n")]

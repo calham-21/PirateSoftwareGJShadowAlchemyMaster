@@ -1,5 +1,7 @@
 extends PlayerState
+var can_play : bool = true
 func enter(_msg := {}) -> void:
+	can_play = true
 	player.current_state = &"Fall"
 func update(_delta: float) -> void:
 	pass
@@ -8,6 +10,9 @@ func physics_update(_delta: float) -> void:
 		state_machine.transition_to("OnLadder")
 	
 	if player.is_on_floor():
+		if can_play == true:
+			can_play = false
+			player.land_audio.play()
 		var tween = get_tree().create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
 		tween.set_parallel(true)
 		tween.set_ease(tween.EASE_IN)

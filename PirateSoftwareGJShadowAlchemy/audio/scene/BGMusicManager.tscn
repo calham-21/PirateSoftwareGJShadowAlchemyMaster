@@ -1,8 +1,8 @@
 [gd_scene load_steps=2 format=3 uid="uid://cfl531yc8sdf4"]
 
-[ext_resource type="AudioStream" uid="uid://c8rq3qvkm0kgw" path="res://audio/music/Slow Stride Loop.ogg" id="1_h0or1"]
+[ext_resource type="AudioStream" uid="uid://pvj4a2ogblm2" path="res://audio/music/Unsolved-Investigation-isaiah658.wav" id="1_h6von"]
 
 [node name="BgMusicManager" type="AudioStreamPlayer"]
-stream = ExtResource("1_h0or1")
-volume_db = -10.0
+stream = ExtResource("1_h6von")
+volume_db = -20.0
 autoplay = true

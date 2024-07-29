@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://btfasgma1a3sm"]
+[gd_scene load_steps=47 format=3 uid="uid://btfasgma1a3sm"]
 
 [ext_resource type="Script" path="res://entities/player/player.gd" id="1_hj8lt"]
 [ext_resource type="Script" path="res://entities/player/statemachine/player_state_machine.gd" id="2_2rs02"]
@@ -11,6 +11,9 @@
 [ext_resource type="Script" path="res://entities/player/states/Push.gd" id="7_r02t6"]
 [ext_resource type="Texture2D" uid="uid://vp2eixv340n5" path="res://assets/player/transmute_area.png" id="10_e5urn"]
 [ext_resource type="Texture2D" uid="uid://cb7bxn1cuumuo" path="res://assets/particle/player_death_particle.png" id="11_u88v0"]
+[ext_resource type="AudioStream" uid="uid://23irwd4441u5" path="res://audio/sfx/footstep.ogg" id="12_mgybf"]
+[ext_resource type="AudioStream" uid="uid://bhqx37nfrv6lk" path="res://audio/sfx/enemy_death.ogg" id="13_45pv5"]
+[ext_resource type="AudioStream" uid="uid://cs7p7h411p5th" path="res://audio/sfx/land.ogg" id="14_rnpxt"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jicib"]
 atlas = ExtResource("2_evdc8")
@@ -252,6 +255,18 @@ particles_anim_loop = false
 [sub_resource type="Gradient" id="Gradient_u72ub"]
 colors = PackedColorArray(1, 0.60702, 0.548183, 1, 1, 1, 1, 1)
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_tlofb"]
+random_pitch = 1.1
+streams_count = 1
+stream_0/stream = ExtResource("12_mgybf")
+stream_0/weight = 1.0
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_4ufnw"]
+random_pitch = 1.2
+streams_count = 1
+stream_0/stream = ExtResource("13_45pv5")
+stream_0/weight = 1.0
+
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
 collision_layer = 2
 collision_mask = 73
@@ -321,6 +336,7 @@ target_position = Vector2(0, 15)
 collision_mask = 64
 
 [node name="MaxTransmuteArea" type="Area2D" parent="."]
+visible = false
 collision_layer = 0
 collision_mask = 128
 
@@ -361,6 +377,19 @@ color_ramp = SubResource("Gradient_u72ub")
 anim_speed_min = 0.8
 anim_speed_max = 1.0
 
+[node name="FootstepAudio" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamRandomizer_tlofb")
+volume_db = -24.0
+
+[node name="DeathAudio" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamRandomizer_4ufnw")
+volume_db = -12.0
+
+[node name="LandAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("14_rnpxt")
+volume_db = -10.0
+
 [connection signal="area_entered" from="MaxTransmuteArea" to="." method="_on_max_transmute_area_area_entered"]
 [connection signal="area_exited" from="MaxTransmuteArea" to="." method="_on_max_transmute_area_area_exited"]
+[connection signal="area_entered" from="DeathArea" to="." method="_on_death_area_area_entered"]
 [connection signal="body_entered" from="DeathArea" to="." method="_on_death_area_body_entered"]

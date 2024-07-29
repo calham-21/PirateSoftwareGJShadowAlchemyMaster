@@ -1,11 +1,14 @@
-[gd_scene load_steps=17 format=3 uid="uid://oretaw7o7q10"]
+[gd_scene load_steps=22 format=3 uid="uid://oretaw7o7q10"]
 
 [ext_resource type="Script" path="res://world/box/box.gd" id="1_4aqcv"]
 [ext_resource type="Texture2D" uid="uid://cesarlkkxojsx" path="res://assets/box/box.png" id="2_8ipqx"]
 [ext_resource type="Texture2D" uid="uid://crpq2sdqwr3ok" path="res://assets/box/box_push_particles.png" id="3_jhpn4"]
 [ext_resource type="Texture2D" uid="uid://k41nfj3dyfyq" path="res://assets/particle/explosion_particle.png" id="4_3efld"]
 [ext_resource type="Texture2D" uid="uid://cb7bxn1cuumuo" path="res://assets/particle/player_death_particle.png" id="5_t5203"]
-[ext_resource type="AudioStream" uid="uid://v4d883d0283" path="res://audio/sfx/DeathFlash.mp3" id="6_smq8e"]
+[ext_resource type="AudioStream" uid="uid://4hbjc5at2vk3" path="res://audio/sfx/explosion.ogg" id="6_h470x"]
+[ext_resource type="AudioStream" uid="uid://cgt5re4jr73ls" path="res://audio/sfx/push.ogg" id="6_n6s2q"]
+[ext_resource type="AudioStream" uid="uid://kpli53t2uibk" path="res://audio/sfx/cant_push.ogg" id="7_k4ytv"]
+[ext_resource type="AudioStream" uid="uid://brms73yw0u8mt" path="res://audio/sfx/block_land_weak.ogg" id="8_ldugb"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5yy2n"]
 size = Vector2(31.5, 31.75)
@@ -46,18 +49,30 @@ colors = PackedColorArray(0.194349, 0.194349, 0.194349, 1, 0.572988, 0.572988, 0
 size = Vector2(116, 110)
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_gu2jh"]
-random_pitch = 1.2
+random_pitch = 1.5
 random_volume_offset_db = 1.19
 streams_count = 1
-stream_0/stream = ExtResource("6_smq8e")
+stream_0/stream = ExtResource("6_h470x")
+stream_0/weight = 1.0
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_ktiip"]
+random_pitch = 1.5
+streams_count = 1
+stream_0/stream = ExtResource("6_n6s2q")
+stream_0/weight = 1.0
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_x7lvh"]
+random_pitch = 1.2
+streams_count = 1
+stream_0/stream = ExtResource("7_k4ytv")
 stream_0/weight = 1.0
 
 [node name="Box" type="CharacterBody2D" groups=["Box"]]
 collision_layer = 8
 collision_mask = 75
-slide_on_ceiling = false
+platform_on_leave = 2
 platform_floor_layers = 4294967105
-safe_margin = 0.06
+safe_margin = 0.001
 script = ExtResource("1_4aqcv")
 is_conducting = false
 sliding_time = 0.2
@@ -85,7 +100,12 @@ target_position = Vector2(0, 36)
 collision_mask = 15
 hit_from_inside = true
 
+[node name="FallingRaycast" type="RayCast2D" parent="."]
+position = Vector2(16, 17)
+target_position = Vector2(0, 23)
+
 [node name="ExtraTransmuteRays" type="Node2D" parent="."]
+visible = false
 
 [node name="TransmuteRaycastBL" type="RayCast2D" parent="ExtraTransmuteRays"]
 position = Vector2(16, 16)
@@ -131,6 +151,7 @@ collision_mask = 2
 hit_from_inside = true
 
 [node name="EnemyRaycast" type="RayCast2D" parent="."]
+position = Vector2(16, 16)
 collision_mask = 4
 
 [node name="PushParticles" type="CPUParticles2D" parent="."]
@@ -257,6 +278,7 @@ anim_speed_min = 5.0
 anim_speed_max = 5.0
 
 [node name="ExplosionArea" type="Area2D" parent="."]
+visible = false
 position = Vector2(16, 16)
 collision_mask = 14
 
@@ -267,6 +289,23 @@ debug_color = Color(0, 0.6, 0.701961, 0)
 [node name="ExplosionAudio" type="AudioStreamPlayer2D" parent="."]
 position = Vector2(16, 16)
 stream = SubResource("AudioStreamRandomizer_gu2jh")
-volume_db = 2.972
+
+[node name="PushAudio" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamRandomizer_ktiip")
+volume_db = -20.0
+
+[node name="CantPushAudio" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamRandomizer_x7lvh")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="LandWeakAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_ldugb")
+volume_db = -8.0
+
+[node name="LandStrongAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_ldugb")
+volume_db = -4.0
+pitch_scale = 0.5
 
 [connection signal="body_entered" from="CrushArea" to="." method="_on_crush_area_body_entered"]
