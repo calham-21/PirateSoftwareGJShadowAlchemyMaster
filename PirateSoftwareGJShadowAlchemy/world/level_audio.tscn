@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://world/level_audio.gd" id="1_8ufrc"]
 [ext_resource type="AudioStream" uid="uid://cgt5re4jr73ls" path="res://audio/sfx/push.ogg" id="2_tkxh0"]
 [ext_resource type="AudioStream" uid="uid://kpli53t2uibk" path="res://audio/sfx/cant_push.ogg" id="3_us5os"]
-[ext_resource type="AudioStream" uid="uid://7owpqnigjfk" path="res://audio/sfx/select_block.ogg" id="4_d1tcc"]
+[ext_resource type="AudioStream" uid="uid://2koh3yqqqsek" path="res://audio/sfx/can_select_block.ogg" id="4_pgbrr"]
 [ext_resource type="AudioStream" uid="uid://dtbo8a5jnmld" path="res://audio/sfx/cant_select_block.ogg" id="5_1p467"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_8rmcc"]
@@ -20,7 +20,7 @@ stream_0/weight = 1.0
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_38wd3"]
 random_pitch = 1.1
 streams_count = 1
-stream_0/stream = ExtResource("4_d1tcc")
+stream_0/stream = ExtResource("4_pgbrr")
 stream_0/weight = 1.0
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_w5gn6"]
@@ -42,7 +42,8 @@ stream = SubResource("AudioStreamRandomizer_xm543")
 
 [node name="CanSelectAudio" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamRandomizer_38wd3")
-volume_db = -16.0
+volume_db = -8.0
+pitch_scale = 1.3
 
 [node name="CantSelectAudio" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamRandomizer_w5gn6")

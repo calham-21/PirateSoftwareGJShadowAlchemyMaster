@@ -104,4 +104,4 @@ position = Vector2(16, -122)
 [node name="LevelAudio" parent="." instance=ExtResource("4_4fjp8")]
 
 [node name="SelectedSpace" parent="." instance=ExtResource("5_2vqew")]
-position = Vector2(224, 102)
+position = Vector2(224, 96)

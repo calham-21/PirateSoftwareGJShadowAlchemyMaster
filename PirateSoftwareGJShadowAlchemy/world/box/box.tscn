@@ -101,6 +101,7 @@ hit_from_inside = true
 
 [node name="PlayerTransmuteRaycast" type="RayCast2D" parent="."]
 position = Vector2(16, 16)
+target_position = Vector2(0, 13)
 collision_mask = 6
 
 [node name="FallingRaycast" type="RayCast2D" parent="."]

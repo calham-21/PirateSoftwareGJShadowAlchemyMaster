@@ -23,11 +23,11 @@ layer_2/tile_data = PackedInt32Array(-458765, 327681, 1, -393229, 327681, 1, -32
 
 [node name="LevelAudio" parent="." instance=ExtResource("10_n4if7")]
 
-[node name="SelectedSpace" parent="." instance=ExtResource("2_lpbam")]
-position = Vector2(-192, 96)
-
 [node name="Player" parent="." instance=ExtResource("3_auqdo")]
-position = Vector2(-208, 104)
+position = Vector2(-208, 128)
+
+[node name="SelectedSpace" parent="." instance=ExtResource("2_lpbam")]
+position = Vector2(-192, 128)
 
 [node name="Exit" parent="." instance=ExtResource("6_2u8bt")]
 position = Vector2(160, -96)

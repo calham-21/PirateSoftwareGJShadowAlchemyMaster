@@ -274,15 +274,18 @@ func transmute(vel: Vector2):
 						selected_space.global_position = new_box.position
 						add_child(new_box)
 					else:
-						level_audio.cant_select_audio.play()
-						selected_space_sprite.frame = 3
-						player.staff_sprite.frame = 4
-						var current_pos = selected_space_sprite.position
-						var tween = create_tween().set_parallel(false).set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
-						tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position - Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
-						tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position + Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
-						tween.tween_property(selected_space_sprite, "position", current_pos, 0.1).set_trans(Tween.TRANS_BOUNCE)
-						await(tween.finished)
+						if can_shake == false:
+							level_audio.cant_select_audio.play()
+							can_shake = true
+							selected_space_sprite.frame = 3
+							player.staff_sprite.frame = 4
+							var current_pos = selected_space_sprite.position
+							var tween = create_tween().set_parallel(false).set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+							tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position - Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+							tween.tween_property(selected_space_sprite, "position", selected_space_sprite.position + Vector2(5, 0),0.05).set_trans(Tween.TRANS_BOUNCE)
+							tween.tween_property(selected_space_sprite, "position", current_pos, 0.1).set_trans(Tween.TRANS_BOUNCE)
+							await(tween.finished)
+							can_shake = false
 						
 			#COMBINE INTO ONE
 			elif selected_box.transmute_raycast.is_colliding() and selected_box.is_sliding == false:
