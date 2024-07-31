@@ -216,9 +216,10 @@ func transmute(vel: Vector2):
 	var vel_norm = vel.normalized()
 	print(vel_norm)
 	var new_pos = vel_norm * grid_size
-	selected_box.transmute_raycast.target_position = new_pos*1.4
+	selected_box.transmute_raycast.target_position = new_pos*1.1
 	selected_box.player_transmute_raycast.target_position = new_pos* 1.5
 	selected_box.transmute_raycast.force_raycast_update()
+	selected_box.player_transmute_raycast.force_raycast_update()
 		
 	#for t_ray in selected_box.extra_transmute_rays.get_children():
 		#if t_ray.is_colliding():

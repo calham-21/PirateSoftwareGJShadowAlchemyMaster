@@ -11,7 +11,7 @@
 [ext_resource type="AudioStream" uid="uid://brms73yw0u8mt" path="res://audio/sfx/block_land_weak.ogg" id="8_ldugb"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5yy2n"]
-size = Vector2(31.5, 31.75)
+size = Vector2(31.5, 31.875)
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_lja3i"]
 particles_animation = true
@@ -70,8 +70,9 @@ stream_0/weight = 1.0
 [node name="Box" type="CharacterBody2D" groups=["Box"]]
 collision_layer = 8
 collision_mask = 75
+collision_priority = 100.0
 platform_floor_layers = 4294967105
-safe_margin = 0.06
+safe_margin = 0.001
 script = ExtResource("1_4aqcv")
 is_conducting = false
 sliding_time = 0.2
@@ -85,7 +86,7 @@ hframes = 8
 vframes = 8
 
 [node name="CollisionShape" type="CollisionShape2D" parent="."]
-position = Vector2(16, 16.125)
+position = Vector2(16, 16.0625)
 shape = SubResource("RectangleShape2D_5yy2n")
 
 [node name="RayCast" type="RayCast2D" parent="."]
@@ -95,13 +96,13 @@ collision_mask = 9
 
 [node name="TransmuteRaycast" type="RayCast2D" parent="."]
 position = Vector2(16, 16)
-target_position = Vector2(0, 36)
+target_position = Vector2(0, 30)
 collision_mask = 15
 hit_from_inside = true
 
 [node name="PlayerTransmuteRaycast" type="RayCast2D" parent="."]
 position = Vector2(16, 16)
-target_position = Vector2(0, 13)
+target_position = Vector2(12, 0)
 collision_mask = 6
 
 [node name="FallingRaycast" type="RayCast2D" parent="."]
@@ -109,7 +110,6 @@ position = Vector2(16, 17)
 target_position = Vector2(0, 23)
 
 [node name="ExtraTransmuteRays" type="Node2D" parent="."]
-visible = false
 
 [node name="TransmuteRaycastBL" type="RayCast2D" parent="ExtraTransmuteRays"]
 position = Vector2(16, 16)
@@ -293,6 +293,7 @@ debug_color = Color(0, 0.6, 0.701961, 0)
 [node name="ExplosionAudio" type="AudioStreamPlayer2D" parent="."]
 position = Vector2(16, 16)
 stream = SubResource("AudioStreamRandomizer_gu2jh")
+volume_db = -16.0
 
 [node name="PushAudio" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamRandomizer_ktiip")

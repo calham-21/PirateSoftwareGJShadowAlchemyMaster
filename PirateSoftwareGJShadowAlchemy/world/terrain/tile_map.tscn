@@ -244,6 +244,19 @@ use_texture_padding = false
 1:2/0/physics_layer_4/angular_velocity = 0.0
 1:2/0/physics_layer_5/linear_velocity = Vector2(0, 0)
 1:2/0/physics_layer_5/angular_velocity = 0.0
+7:1/0 = 0
+7:1/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+7:1/0/physics_layer_0/angular_velocity = 0.0
+7:1/0/physics_layer_1/linear_velocity = Vector2(0, 0)
+7:1/0/physics_layer_1/angular_velocity = 0.0
+7:1/0/physics_layer_2/linear_velocity = Vector2(0, 0)
+7:1/0/physics_layer_2/angular_velocity = 0.0
+7:1/0/physics_layer_3/linear_velocity = Vector2(0, 0)
+7:1/0/physics_layer_3/angular_velocity = 0.0
+7:1/0/physics_layer_4/linear_velocity = Vector2(0, 0)
+7:1/0/physics_layer_4/angular_velocity = 0.0
+7:1/0/physics_layer_5/linear_velocity = Vector2(0, 0)
+7:1/0/physics_layer_5/angular_velocity = 0.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vnr5q"]
 texture = ExtResource("2_01782")
